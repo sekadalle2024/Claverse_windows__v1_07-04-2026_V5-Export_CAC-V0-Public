@@ -1,5 +1,5 @@
 /**
- * DemarrerMenu Component - Version complète avec structure E-revision
+ * DemarrerMenu Component
  * 
  * Menu contextuel hiérarchique pour automatiser les prompts E-audit
  * Design inspiré du menu Claude/ChatGPT avec deux panneaux côte à côte
@@ -14,27 +14,25 @@ import {
   Shield,
   ClipboardList,
   FileCheck,
+  Target,
   AlertTriangle,
+  CheckSquare,
+  FileSearch,
+  BookOpen,
+  HelpCircle,
   Map,
   BarChart3,
+  Grid3X3,
   Calculator,
   Briefcase,
   X,
   Zap,
+  Brain,
   TrendingUp,
+  Settings,
   User,
   Package,
-  Building,
-  Users,
-  Truck,
-  UserCheck,
-  PiggyBank,
-  Receipt,
-  Target,
-  FileSearch,
-  CheckSquare,
-  BookOpen,
-  HelpCircle
+  Building
 } from 'lucide-react';
 
 // ============================================================
@@ -76,6 +74,7 @@ interface PhaseItem {
   etapes?: EtapeItem[];
   cycles?: CycleComptable[];
 }
+
 interface LogicielItem {
   id: string;
   label: string;
@@ -95,11 +94,13 @@ interface DemarrerMenuProps {
 const MODES: ModeItem[] = [
   { id: 'normal', label: 'Normal', prefix: '' },
   { id: 'demo', label: 'Demo', prefix: '[Demo] = Activate\n' },
-  { id: 'avance', label: 'Avancé', prefix: '[Mode] = Avancé\n' }
+  { id: 'avance', label: 'Avancé', prefix: '[Mode] = Avancé\n' },
+  { id: 'intelligent', label: 'Intelligent', prefix: '[Mode] = Intelligent\n' },
+  { id: 'manuel', label: 'Manuel', prefix: '[Mode] = Manuel\n' }
 ];
 
 // ============================================================
-// CONFIGURATION DU MENU - VERSION COMPLÈTE
+// CONFIGURATION DU MENU
 // ============================================================
 
 const MENU_DATA: LogicielItem[] = [
@@ -177,12 +178,9 @@ const MENU_DATA: LogicielItem[] = [
             label: 'Feuille couverture',
             norme: '14.6 Documentation relative à la mission',
             icon: <FileCheck className="w-4 h-4" />,
-            command: `[Command] = Couverture
-[Processus] = Sécurité trésorerie
-[Contrôle] = Verifier l exhaustivite des inventaires de caisse
-[Instruction] = Template
-[Nb de lignes] = 15
-[Modele de test] = no, compte, site, libelle, solde BG, Solde Pv inventaire`
+            command: `[Command] = Feuille couverture
+[Processus] = 
+[Objectif] = `
           }
         ]
       },
@@ -205,14 +203,18 @@ const MENU_DATA: LogicielItem[] = [
             label: 'Synthèse des Frap',
             norme: '14.2 Analyses et constats potentiels de la mission',
             icon: <FileSearch className="w-4 h-4" />,
-            command: `[Command] = /Table synthese`
+            command: `[Command] = Synthèse des Frap
+[Processus] = 
+[Objectif] = `
           },
           {
             id: 'rapport-provisoire',
             label: 'Rapport provisoire',
             norme: '14.5 Conclusions de la mission',
             icon: <FileText className="w-4 h-4" />,
-            command: `[Command] = /Table rapport_provisoire`
+            command: `[Command] = Rapport provisoire
+[Processus] = 
+[Objectif] = `
           },
           {
             id: 'reunion-cloture',
@@ -228,14 +230,46 @@ const MENU_DATA: LogicielItem[] = [
             label: 'Rapport final',
             norme: '15.1 Communication des résultats définitifs de la mission',
             icon: <FileCheck className="w-4 h-4" />,
-            command: `[Command] = /Table rapport_final`
+            command: `[Command] = Rapport final
+[Processus] = 
+[Objectif] = `
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'e-cartographie',
+    label: 'E-cartographie',
+    icon: <Map className="w-4 h-4" />,
+    phases: [
+      {
+        id: 'analyse-risques',
+        label: 'Analyse des risques',
+        etapes: [
+          {
+            id: 'identification-risques',
+            label: 'Identification des risques',
+            icon: <Target className="w-4 h-4" />,
+            command: `[Command] = Identification des risques
+[Domaine] = 
+[Périmètre] = `
           },
           {
-            id: 'suivi-recos',
-            label: 'Suivi des recos',
-            norme: '15.2 Suivi des recommandations',
-            icon: <CheckSquare className="w-4 h-4" />,
-            command: `[Command] = /Table suivi_recos`
+            id: 'evaluation-risques',
+            label: 'Évaluation des risques',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = Évaluation des risques
+[Domaine] = 
+[Critères] = `
+          },
+          {
+            id: 'matrice-risques',
+            label: 'Matrice des risques',
+            icon: <Grid3X3 className="w-4 h-4" />,
+            command: `[Command] = Matrice des risques
+[Domaine] = 
+[Format] = `
           }
         ]
       }
@@ -322,8 +356,7 @@ const MENU_DATA: LogicielItem[] = [
 [test] = AA200
 [reference] = Caisse
 [Nb de lignes] = 10`
-              }
-              ,
+              },
               {
                 id: 'tresorerie-aa400',
                 reference: 'AA400',
@@ -366,28 +399,6 @@ const MENU_DATA: LogicielItem[] = [
 [Processus] = Trésorerie
 [test] = AA02
 [reference] = Travaux analytiques caisse
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'tresorerie-aa03',
-                reference: 'AA03',
-                label: 'Revue du Contrôle interne',
-                processus: 'Trésorerie',
-                command: `[Command] = /feuille couverture
-[Processus] = Trésorerie
-[test] = AA03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'tresorerie-aa04',
-                reference: 'AA04',
-                label: 'Revue des techniques comptables',
-                processus: 'Trésorerie',
-                command: `[Command] = /feuille couverture
-[Processus] = Trésorerie
-[test] = AA04
-[reference] = Revue des techniques comptables
 [Nb de lignes] = 10`
               }
             ]
@@ -462,8 +473,7 @@ const MENU_DATA: LogicielItem[] = [
 [test] = BB30
 [reference] = CA-TSE-TVA
 [Nb de lignes] = 10`
-              }
-              ,
+              },
               {
                 id: 'ventes-bb20',
                 reference: 'BB20',
@@ -496,28 +506,6 @@ const MENU_DATA: LogicielItem[] = [
 [test] = BB02
 [reference] = Travaux analytiques CA
 [Nb de lignes] = 10`
-              },
-              {
-                id: 'ventes-bb03',
-                reference: 'BB03',
-                label: 'Revue du Contrôle interne',
-                processus: 'VENTES',
-                command: `[Command] = /feuille couverture
-[Processus] = VENTES
-[test] = BB03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'ventes-bb04',
-                reference: 'BB04',
-                label: 'Revue des techniques comptables',
-                processus: 'VENTES',
-                command: `[Command] = /feuille couverture
-[Processus] = VENTES
-[test] = BB04
-[reference] = Revue des techniques comptables
-[Nb de lignes] = 10`
               }
             ]
           },
@@ -527,147 +515,58 @@ const MENU_DATA: LogicielItem[] = [
             icon: <Package className="w-4 h-4" />,
             tests: [
               {
-                id: 'stocks-cc020',
-                reference: 'CC020',
+                id: 'stocks-cc20',
+                reference: 'CC20',
                 label: 'Test sur la centralisation',
-                processus: 'Stock',
+                processus: 'STOCKS',
                 command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC020
+[Processus] = STOCKS
+[test] = CC20
 [reference] = Test sur la centralisation
 [Nb de lignes] = 10`
               },
               {
-                id: 'stocks-cc025',
-                reference: 'CC025',
-                label: 'Test Stock Phys_Théorique',
-                processus: 'Stock',
+                id: 'stocks-cc30',
+                reference: 'CC30',
+                label: 'Test Stock Physique Inventorié',
+                processus: 'STOCKS',
                 command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC025
-[reference] = Test Stock Phys_Théorique
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'stocks-cc030',
-                reference: 'CC030',
-                label: 'Test Stock Physi_Inventorié',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC030
-[reference] = Test Stock Physi_Inventorié
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'stocks-cc035',
-                reference: 'CC035',
-                label: 'Test Stock PV_Valorisé',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC035
-[reference] = Test Stock PV_Valorisé
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'stocks-cc040',
-                reference: 'CC040',
-                label: 'Rapprochement de solde BG AAchier stock',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC040
-[reference] = Rapprochement de solde BG AAchier stock
+[Processus] = STOCKS
+[test] = CC30
+[reference] = Test Stock Physique Inventorié
 [Nb de lignes] = 10`
               },
               {
                 id: 'stocks-cc104',
                 reference: 'CC104',
                 label: 'Test la variation stock',
-                processus: 'Stock',
+                processus: 'STOCKS',
                 command: `[Command] = /feuille couverture
-[Processus] = Stock
+[Processus] = STOCKS
 [test] = CC104
 [reference] = Test la variation stock
-[Nb de lignes] = 10`
-              }
-              ,
-              {
-                id: 'stocks-cc120',
-                reference: 'CC120',
-                label: 'Rapprochement de solde Valorisation',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC120
-[reference] = Rapprochement de solde Valorisation
 [Nb de lignes] = 10`
               },
               {
                 id: 'stocks-cc145',
                 reference: 'CC145',
-                label: 'Valorisation en CUMP AAN',
-                processus: 'Stock',
+                label: 'Valorisation en CUMP',
+                processus: 'STOCKS',
                 command: `[Command] = /feuille couverture
-[Processus] = Stock
+[Processus] = STOCKS
 [test] = CC145
-[reference] = Valorisation en CUMP AAN
+[reference] = Valorisation en CUMP
 [Nb de lignes] = 10`
               },
               {
                 id: 'stocks-cc300',
                 reference: 'CC300',
                 label: 'Provisions Dépréciation',
-                processus: 'Stock',
+                processus: 'STOCKS',
                 command: `[Command] = /feuille couverture
-[Processus] = Stock
+[Processus] = STOCKS
 [test] = CC300
 [reference] = Provisions Dépréciation
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'stocks-cc02',
-                reference: 'CC02',
-                label: 'Feuilles maîtresses-STOCKS',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC02
-[reference] = Feuilles maîtresses-STOCKS
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'stocks-cc02-travaux',
-                reference: 'CC02',
-                label: 'Travaux analytiques -Stocks',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC02
-[reference] = Travaux analytiques -Stocks
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'stocks-cc03',
-                reference: 'CC03',
-                label: 'Revue du Contrôle interne',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'stocks-cc04',
-                reference: 'CC04',
-                label: 'Revue des techniques comptables',
-                processus: 'Stock',
-                command: `[Command] = /feuille couverture
-[Processus] = Stock
-[test] = CC04
-[reference] = Revue des techniques comptables
 [Nb de lignes] = 10`
               }
             ]
@@ -675,39 +574,17 @@ const MENU_DATA: LogicielItem[] = [
           {
             id: 'cycle-immobilisations',
             label: 'Immobilisations',
-            icon: <Building className="w-4 h-4" />,
+            icon: <Briefcase className="w-4 h-4" />,
             tests: [
               {
                 id: 'immobilisations-dd040',
                 reference: 'DD040',
-                label: 'Tableau Mouv immobilisations',
+                label: 'Tableau Mouvement immobilisations',
                 processus: 'IMMOBILISATIONS',
                 command: `[Command] = /feuille couverture
 [Processus] = IMMOBILISATIONS
 [test] = DD040
-[reference] = Tableau Mouv immobilisations
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'immobilisations-dd043',
-                reference: 'DD043',
-                label: 'Tableau mouv Dotations',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD043
-[reference] = Tableau mouv Dotations
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'immobilisations-dd045',
-                reference: 'DD045',
-                label: 'Rapprochement de solde BG AAchier immob',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD045
-[reference] = Rapprochement de solde BG AAchier immob
+[reference] = Tableau Mouvement immobilisations
 [Nb de lignes] = 10`
               },
               {
@@ -742,29 +619,6 @@ const MENU_DATA: LogicielItem[] = [
 [test] = DD145
 [reference] = Test dotation aux amortissements
 [Nb de lignes] = 10`
-              }
-              ,
-              {
-                id: 'immobilisations-dd155',
-                reference: 'DD155',
-                label: 'IMMOBILISATIONS',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD155
-[reference] = IMMOBILISATIONS
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'immobilisations-dd160',
-                reference: 'DD160',
-                label: 'Test sur les Encours',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD160
-[reference] = Test sur les Encours
-[Nb de lignes] = 10`
               },
               {
                 id: 'immobilisations-dd180',
@@ -776,57 +630,13 @@ const MENU_DATA: LogicielItem[] = [
 [test] = DD180
 [reference] = Test entretien charges
 [Nb de lignes] = 10`
-              },
-              {
-                id: 'immobilisations-dd02',
-                reference: 'DD02',
-                label: 'Feuilles maîtresses-IMMOBILISATIONS',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD02
-[reference] = Feuilles maîtresses-IMMOBILISATIONS
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'immobilisations-dd02-travaux',
-                reference: 'DD02',
-                label: 'Travaux analytiques -Immo',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD02
-[reference] = Travaux analytiques -Immo
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'immobilisations-dd03',
-                reference: 'DD03',
-                label: 'Revue du Contrôle interne',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'immobilisations-dd04',
-                reference: 'DD04',
-                label: 'Revue des techniques comptables',
-                processus: 'IMMOBILISATIONS',
-                command: `[Command] = /feuille couverture
-[Processus] = IMMOBILISATIONS
-[test] = DD04
-[reference] = Revue des techniques comptables
-[Nb de lignes] = 10`
               }
             ]
           },
           {
             id: 'cycle-clients',
             label: 'Clients',
-            icon: <Users className="w-4 h-4" />,
+            icon: <User className="w-4 h-4" />,
             tests: [
               {
                 id: 'clients-fe040',
@@ -862,17 +672,6 @@ const MENU_DATA: LogicielItem[] = [
 [Nb de lignes] = 10`
               },
               {
-                id: 'clients-fe340',
-                reference: 'FE340',
-                label: 'Test de séparation des exercices Avoirs',
-                processus: 'client',
-                command: `[Command] = /feuille couverture
-[Processus] = client
-[test] = FE340
-[reference] = Test de séparation des exercices Avoirs
-[Nb de lignes] = 10`
-              },
-              {
                 id: 'clients-fe345',
                 reference: 'FE345',
                 label: 'Créances provisionnées',
@@ -893,210 +692,45 @@ const MENU_DATA: LogicielItem[] = [
 [test] = FE360
 [reference] = Revue Balance agée
 [Nb de lignes] = 10`
-              },
-              {
-                id: 'clients-fe02',
-                reference: 'FE02',
-                label: 'Feuilles maîtresses-CLIENTS',
-                processus: 'client',
-                command: `[Command] = /feuille couverture
-[Processus] = client
-[test] = FE02
-[reference] = Feuilles maîtresses-CLIENTS
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'clients-fe02-travaux',
-                reference: 'FE02',
-                label: 'Travaux analytiques -Clients',
-                processus: 'client',
-                command: `[Command] = /feuille couverture
-[Processus] = client
-[test] = FE02
-[reference] = Travaux analytiques -Clients
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'clients-fe03',
-                reference: 'FE03',
-                label: 'Revue du Contrôle interne',
-                processus: 'client',
-                command: `[Command] = /feuille couverture
-[Processus] = client
-[test] = FE03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'clients-fe04',
-                reference: 'FE04',
-                label: 'Revue des techniques comptables',
-                processus: 'client',
-                command: `[Command] = /feuille couverture
-[Processus] = client
-[test] = FE04
-[reference] = Revue des techniques comptables
-[Nb de lignes] = 10`
               }
             ]
           },
           {
             id: 'cycle-fournisseurs',
             label: 'Fournisseurs',
-            icon: <Truck className="w-4 h-4" />,
+            icon: <Building className="w-4 h-4" />,
             tests: [
               {
-                id: 'fournisseurs-ff040',
-                reference: 'FF040',
-                label: 'Circularisation fournisseurs',
+                id: 'fournisseurs-gg040',
+                reference: 'GG040',
+                label: 'Circularisation fournisseur',
                 processus: 'fournisseur',
                 command: `[Command] = /feuille couverture
 [Processus] = fournisseur
-[test] = FF040
-[reference] = Circularisation fournisseurs
+[test] = GG040
+[reference] = Circularisation fournisseur
 [Nb de lignes] = 10`
               },
               {
-                id: 'fournisseurs-ff041',
-                reference: 'FF041',
-                label: 'TEST FNP_BBE',
+                id: 'fournisseurs-gg200',
+                reference: 'GG200',
+                label: 'Procédure alternative',
                 processus: 'fournisseur',
                 command: `[Command] = /feuille couverture
 [Processus] = fournisseur
-[test] = FF041
-[reference] = TEST FNP_BBE
+[test] = GG200
+[reference] = Procédure alternative
 [Nb de lignes] = 10`
               },
               {
-                id: 'fournisseurs-ff045',
-                reference: 'FF045',
-                label: 'Rapprochement de solde BA-BG',
+                id: 'fournisseurs-gg300',
+                reference: 'GG300',
+                label: 'Test de séparation des exercices Fournisseur',
                 processus: 'fournisseur',
                 command: `[Command] = /feuille couverture
 [Processus] = fournisseur
-[test] = FF045
-[reference] = Rapprochement de solde BA-BG
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff200',
-                reference: 'FF200',
-                label: 'Procédure alternative FRS',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF200
-[reference] = Procédure alternative FRS
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff300',
-                reference: 'FF300',
-                label: 'Test de séparation des exercices Fournisseurs',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF300
-[reference] = Test de séparation des exercices Fournisseurs
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff345',
-                reference: 'FF345',
-                label: 'Test de séparation des exercices Avoirs',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF345
-[reference] = Test de séparation des exercices Avoirs
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff400',
-                reference: 'FF400',
-                label: 'Test PCA_CCA',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF400
-[reference] = Test PCA_CCA
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff420',
-                reference: 'FF420',
-                label: 'TEST AAR_AAE',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF420
-[reference] = TEST AAR_AAE
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff445',
-                reference: 'FF445',
-                label: 'Test charges récurrentes',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF445
-[reference] = Test charges récurrentes
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff465',
-                reference: 'FF465',
-                label: 'Rapprochement fournisseurs',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF465
-[reference] = Rapprochement fournisseurs
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff02',
-                reference: 'FF02',
-                label: 'Feuilles maîtresses-FOURNISSEURS',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF02
-[reference] = Feuilles maîtresses-FOURNISSEURS
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff02-travaux',
-                reference: 'FF02',
-                label: 'Travaux analytiques -Fournisseurs',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF02
-[reference] = Travaux analytiques -Fournisseurs
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff03',
-                reference: 'FF03',
-                label: 'Revue du Contrôle interne',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'fournisseurs-ff04',
-                reference: 'FF04',
-                label: 'Revue des techniques comptables',
-                processus: 'fournisseur',
-                command: `[Command] = /feuille couverture
-[Processus] = fournisseur
-[test] = FF04
-[reference] = Revue des techniques comptables
+[test] = GG300
+[reference] = Test de séparation des exercices Fournisseur
 [Nb de lignes] = 10`
               }
             ]
@@ -1104,28 +738,28 @@ const MENU_DATA: LogicielItem[] = [
           {
             id: 'cycle-personnel',
             label: 'Personnel',
-            icon: <UserCheck className="w-4 h-4" />,
+            icon: <User className="w-4 h-4" />,
             tests: [
               {
                 id: 'personnel-fp040',
                 reference: 'FP040',
-                label: 'Test CotisationsFiscales',
+                label: 'Test Cotisations Fiscales',
                 processus: 'personnel',
                 command: `[Command] = /feuille couverture
 [Processus] = personnel
 [test] = FP040
-[reference] = Test CotisationsFiscales
+[reference] = Test Cotisations Fiscales
 [Nb de lignes] = 10`
               },
               {
-                id: 'personnel-fp045',
-                reference: 'FP045',
-                label: 'Rapprochement de solde BG-livre de paie',
+                id: 'personnel-fp104',
+                reference: 'FP104',
+                label: 'Test Cotisations sociales',
                 processus: 'personnel',
                 command: `[Command] = /feuille couverture
 [Processus] = personnel
-[test] = FP045
-[reference] = Rapprochement de solde BG-livre de paie
+[test] = FP104
+[reference] = Test Cotisations sociales
 [Nb de lignes] = 10`
               },
               {
@@ -1149,199 +783,45 @@ const MENU_DATA: LogicielItem[] = [
 [test] = FP145
 [reference] = Travaux analytiques salaire
 [Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-nn200',
-                reference: 'NN200',
-                label: 'Provisions congés',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = NN200
-[reference] = Provisions congés
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-fp02',
-                reference: 'FP02',
-                label: 'Feuilles maîtresses-PERSONNEL',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = FP02
-[reference] = Feuilles maîtresses-PERSONNEL
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-fp02-travaux',
-                reference: 'FP02',
-                label: 'Travaux analytiques -Personnel',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = FP02
-[reference] = Travaux analytiques -Personnel
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-fp03',
-                reference: 'FP03',
-                label: 'Revue du Contrôle interne',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = FP03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-fp04',
-                reference: 'FP04',
-                label: 'Revue des techniques comptables',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = FP04
-[reference] = Revue des techniques comptables
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-nn02',
-                reference: 'NN02',
-                label: 'Feuilles maîtresses-PROVISIONS RISK&CHARGE',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = NN02
-[reference] = Feuilles maîtresses-PROVISIONS RISK&CHARGE
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-nn02-travaux',
-                reference: 'NN02',
-                label: 'Travaux analytiques -Prov Risk',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = NN02
-[reference] = Travaux analytiques -Prov Risk
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-nn03',
-                reference: 'NN03',
-                label: 'Revue du Contrôle interne',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = NN03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'personnel-nn04',
-                reference: 'NN04',
-                label: 'Revue des techniques comptables',
-                processus: 'personnel',
-                command: `[Command] = /feuille couverture
-[Processus] = personnel
-[test] = NN04
-[reference] = Revue des techniques comptables
-[Nb de lignes] = 10`
               }
             ]
           },
           {
             id: 'cycle-capitaux-propres',
             label: 'Capitaux propres',
-            icon: <PiggyBank className="w-4 h-4" />,
+            icon: <Calculator className="w-4 h-4" />,
             tests: [
               {
-                id: 'capitaux-fq040',
-                reference: 'FQ040',
-                label: 'Mouvement Résultat net',
+                id: 'capitaux-mm040',
+                reference: 'MM040',
+                label: 'Test Tableau mouvement capitaux propres',
                 processus: 'capitaux propres',
                 command: `[Command] = /feuille couverture
 [Processus] = capitaux propres
-[test] = FQ040
-[reference] = Mouvement Résultat net
+[test] = MM040
+[reference] = Test Tableau mouvement capitaux propres
 [Nb de lignes] = 10`
               },
               {
-                id: 'capitaux-fq200',
-                reference: 'FQ200',
-                label: 'Emprunts et dettes',
+                id: 'capitaux-mm104',
+                reference: 'MM104',
+                label: 'Test Augmentation capital',
                 processus: 'capitaux propres',
                 command: `[Command] = /feuille couverture
 [Processus] = capitaux propres
-[test] = FQ200
-[reference] = Emprunts et dettes
+[test] = MM104
+[reference] = Test Augmentation capital
 [Nb de lignes] = 10`
               },
               {
-                id: 'capitaux-fq300',
-                reference: 'FQ300',
-                label: 'Tableau provision RC',
+                id: 'capitaux-mm120',
+                reference: 'MM120',
+                label: 'Test Réduction capital',
                 processus: 'capitaux propres',
                 command: `[Command] = /feuille couverture
 [Processus] = capitaux propres
-[test] = FQ300
-[reference] = Tableau provision RC
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'capitaux-fq400',
-                reference: 'FQ400',
-                label: 'Subventions',
-                processus: 'capitaux propres',
-                command: `[Command] = /feuille couverture
-[Processus] = capitaux propres
-[test] = FQ400
-[reference] = Subventions
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'capitaux-fq02',
-                reference: 'FQ02',
-                label: 'Feuilles maîtresses-CAPITAUX PROPRES',
-                processus: 'capitaux propres',
-                command: `[Command] = /feuille couverture
-[Processus] = capitaux propres
-[test] = FQ02
-[reference] = Feuilles maîtresses-CAPITAUX PROPRES
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'capitaux-fq02-travaux',
-                reference: 'FQ02',
-                label: 'Travaux analytiques capitaux',
-                processus: 'capitaux propres',
-                command: `[Command] = /feuille couverture
-[Processus] = capitaux propres
-[test] = FQ02
-[reference] = Travaux analytiques capitaux
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'capitaux-fq03',
-                reference: 'FQ03',
-                label: 'Revue du Contrôle interne',
-                processus: 'capitaux propres',
-                command: `[Command] = /feuille couverture
-[Processus] = capitaux propres
-[test] = FQ03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'capitaux-fq04',
-                reference: 'FQ04',
-                label: 'Revue des techniques comptables',
-                processus: 'capitaux propres',
-                command: `[Command] = /feuille couverture
-[Processus] = capitaux propres
-[test] = FQ04
-[reference] = Revue des techniques comptables
+[test] = MM120
+[reference] = Test Réduction capital
 [Nb de lignes] = 10`
               }
             ]
@@ -1349,105 +829,39 @@ const MENU_DATA: LogicielItem[] = [
           {
             id: 'cycle-charges-exploitation',
             label: 'Charges d\'exploitation',
-            icon: <Receipt className="w-4 h-4" />,
+            icon: <BarChart3 className="w-4 h-4" />,
             tests: [
               {
-                id: 'charges-mm042',
-                reference: 'MM042',
-                label: 'TEST DETAIL PUB',
-                processus: 'charge d\'exploitation',
+                id: 'charges-ll040',
+                reference: 'LL040',
+                label: 'Test Charges externes',
+                processus: 'charges d\'exploitation',
                 command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM042
-[reference] = TEST DETAIL PUB
+[Processus] = charges d'exploitation
+[test] = LL040
+[reference] = Test Charges externes
 [Nb de lignes] = 10`
               },
               {
-                id: 'charges-mm200',
-                reference: 'MM200',
-                label: 'Test sur les charges prestations',
-                processus: 'charge d\'exploitation',
+                id: 'charges-ll104',
+                reference: 'LL104',
+                label: 'Test Autres charges',
+                processus: 'charges d\'exploitation',
                 command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM200
-[reference] = Test sur les charges prestations
+[Processus] = charges d'exploitation
+[test] = LL104
+[reference] = Test Autres charges
 [Nb de lignes] = 10`
               },
               {
-                id: 'charges-mm245',
-                reference: 'MM245',
-                label: 'Test TSE',
-                processus: 'charge d\'exploitation',
+                id: 'charges-ll300',
+                reference: 'LL300',
+                label: 'Test Provisions pour risques',
+                processus: 'charges d\'exploitation',
                 command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM245
-[reference] = Test TSE
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'charges-mm300',
-                reference: 'MM300',
-                label: 'Test patentes',
-                processus: 'charge d\'exploitation',
-                command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM300
-[reference] = Test patentes
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'charges-mm400',
-                reference: 'MM400',
-                label: 'Test impôt Foncier',
-                processus: 'charge d\'exploitation',
-                command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM400
-[reference] = Test impôt Foncier
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'charges-mm02',
-                reference: 'MM02',
-                label: 'Feuilles maîtresses-CHARGES D\'EXPL°',
-                processus: 'charge d\'exploitation',
-                command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM02
-[reference] = Feuilles maîtresses-CHARGES D'EXPL°
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'charges-mm02-revue',
-                reference: 'MM02',
-                label: 'Revue analytique Charges',
-                processus: 'charge d\'exploitation',
-                command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM02
-[reference] = Revue analytique Charges
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'charges-mm03',
-                reference: 'MM03',
-                label: 'Revue du Contrôle interne',
-                processus: 'charge d\'exploitation',
-                command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'charges-mm04',
-                reference: 'MM04',
-                label: 'Revue des techniques comptables',
-                processus: 'charge d\'exploitation',
-                command: `[Command] = /feuille couverture
-[Processus] = charge d'exploitation
-[test] = MM04
-[reference] = Revue des techniques comptables
+[Processus] = charges d'exploitation
+[test] = LL300
+[reference] = Test Provisions pour risques
 [Nb de lignes] = 10`
               }
             ]
@@ -1455,50 +869,28 @@ const MENU_DATA: LogicielItem[] = [
           {
             id: 'cycle-impots-taxes',
             label: 'Impôts et taxes',
-            icon: <FileText className="w-4 h-4" />,
+            icon: <Calculator className="w-4 h-4" />,
             tests: [
               {
                 id: 'impots-nn040',
                 reference: 'NN040',
-                label: 'Rapprochement de solde TVA - CA',
+                label: 'Test IS',
                 processus: 'impôt et taxes',
                 command: `[Command] = /feuille couverture
 [Processus] = impôt et taxes
 [test] = NN040
-[reference] = Rapprochement de solde TVA - CA
+[reference] = Test IS
 [Nb de lignes] = 10`
               },
               {
-                id: 'impots-nn200',
-                reference: 'NN200',
-                label: 'Test CN',
+                id: 'impots-nn104',
+                reference: 'NN104',
+                label: 'Test TVA',
                 processus: 'impôt et taxes',
                 command: `[Command] = /feuille couverture
 [Processus] = impôt et taxes
-[test] = NN200
-[reference] = Test CN
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'impots-nn220',
-                reference: 'NN220',
-                label: 'Test IGR',
-                processus: 'impôt et taxes',
-                command: `[Command] = /feuille couverture
-[Processus] = impôt et taxes
-[test] = NN220
-[reference] = Test IGR
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'impots-nn245',
-                reference: 'NN245',
-                label: 'Test IRC',
-                processus: 'impôt et taxes',
-                command: `[Command] = /feuille couverture
-[Processus] = impôt et taxes
-[test] = NN245
-[reference] = Test IRC
+[test] = NN104
+[reference] = Test TVA
 [Nb de lignes] = 10`
               },
               {
@@ -1511,39 +903,6 @@ const MENU_DATA: LogicielItem[] = [
 [test] = NN300
 [reference] = Test IRVM
 [Nb de lignes] = 10`
-              },
-              {
-                id: 'impots-nn02',
-                reference: 'NN02',
-                label: 'Feuilles maîtresses-DETTES FISCAL& SOCIAL',
-                processus: 'impôt et taxes',
-                command: `[Command] = /feuille couverture
-[Processus] = impôt et taxes
-[test] = NN02
-[reference] = Feuilles maîtresses-DETTES FISCAL& SOCIAL
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'impots-nn02-revue',
-                reference: 'NN02',
-                label: 'Revue analytique Dettes Fiscales',
-                processus: 'impôt et taxes',
-                command: `[Command] = /feuille couverture
-[Processus] = impôt et taxes
-[test] = NN02
-[reference] = Revue analytique Dettes Fiscales
-[Nb de lignes] = 10`
-              },
-              {
-                id: 'impots-nn03',
-                reference: 'NN03',
-                label: 'Revue du Contrôle interne',
-                processus: 'impôt et taxes',
-                command: `[Command] = /feuille couverture
-[Processus] = impôt et taxes
-[test] = NN03
-[reference] = Revue du Contrôle interne
-[Nb de lignes] = 10`
               }
             ]
           }
@@ -1554,119 +913,553 @@ const MENU_DATA: LogicielItem[] = [
         label: 'Synthèse de mission',
         etapes: [
           {
-            id: 'frap',
-            label: 'Frap',
-            icon: <AlertTriangle className="w-4 h-4" />,
-            command: `[Command] = /Frap
-[Cycle] = Tresorerie
-[Assertion] = validité, formalisation
-[Anomalie] = pertes des factures pour 888 0000 FCFA
-[Integration] = integration_min`
-          },
-          {
-            id: 'synthese-frap',
-            label: 'Synthèse des frap',
-            icon: <FileSearch className="w-4 h-4" />,
-            command: `[Command] = /Table synthese`
-          },
-          {
-            id: 'rapport-provisoire',
-            label: 'Rapport provisoire',
+            id: 'synthese-travaux',
+            label: 'Synthèse des travaux',
             icon: <FileText className="w-4 h-4" />,
-            command: `[Command] = /Table rapport_provisoire`
+            command: `[Command] = Synthèse des travaux
+[Mission] = 
+[Période] = 
+[Conclusions] = `
           },
           {
-            id: 'rapport-final',
-            label: 'Rapport final',
+            id: 'points-attention',
+            label: "Points d'attention",
+            icon: <AlertTriangle className="w-4 h-4" />,
+            command: `[Command] = Points d'attention
+[Domaine] = 
+[Risque] = 
+[Recommandation] = `
+          },
+          {
+            id: 'rapport-synthese',
+            label: 'Rapport de synthèse',
             icon: <FileCheck className="w-4 h-4" />,
-            command: `[Command] = /Table rapport_final`
-          },
-          {
-            id: 'suivi-recos',
-            label: 'Suivi des recos',
-            icon: <CheckSquare className="w-4 h-4" />,
-            command: `[Command] = /Table suivi_recos`
+            command: `[Command] = Rapport de synthèse
+[Mission] = 
+[Conclusions] = 
+[Recommandations] = `
           }
         ]
       }
     ]
   },
-  {
-    id: 'e-cartographie',
-    label: 'E-cartographie',
-    icon: <Map className="w-4 h-4" />,
-    phases: [
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB145
+[reference] = Test de séparation des exercices ventes
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb160',
+            label: 'BB160 - Test de séparation des exercices avoir',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB160
+[reference] = Test de séparation des exercices avoir
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb300',
+            label: 'BB300 - Test de validation analytique',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB300
+[reference] = Test de validation analytique
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb545',
+            label: 'BB545 - Note de synthèse Test de séparation des exercices',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB545
+[reference] = Note de synthèse Test de séparation des exercices
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb30',
+            label: 'BB30 - CA-TSE-TVA',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB30
+[reference] = CA-TSE-TVA
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb20',
+            label: 'BB20 - Rapprochement de solde CA TVA_TSE',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB20
+[reference] = Rapprochement de solde CA TVA_TSE
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb02',
+            label: 'BB02 - Feuilles maîtresses-CHIFFRE D\'AFFAIRES',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB02
+[reference] = Feuilles maîtresses-CHIFFRE D'AFFAIRES
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb02-travaux',
+            label: 'BB02 - Travaux analytiques CA',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB02
+[reference] = Travaux analytiques CA
+[Nb de lignes] = 10`
+          }
+        ]
+      },
       {
-        id: 'analyse-risques',
-        label: 'Analyse des risques',
+        id: 'controle-comptes-stocks',
+        label: 'Stocks',
         etapes: [
           {
-            id: 'cartographie-processus',
-            label: 'Cartographie des processus',
-            icon: <Target className="w-4 h-4" />,
-            command: `[Command] = Etape de mission
-[Cycle] = Tresorerie
-[Processus] = rapprochements bancaires
-[Etape précédente] = Prise de connaissance
-[Etape de mission] = Cartographie des processus
-[Modele] = Cycle, processus, sous processus, operations
-[Nb de lignes] = 50`
+            id: 'stocks-bb040',
+            label: 'BB040 - Rapprochement CA',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = BB040
+[reference] = Rapprochement CA
+[Nb de lignes] = 10`
           },
           {
-            id: 'question-identification-risques',
-            label: 'Question Identification des risques',
-            icon: <HelpCircle className="w-4 h-4" />,
-            command: `[Command] = Etape de mission
-[Processus] = rapprochements bancaires
-[Etape précédente] = Cartographie des processus
-[Etape de mission] = Question Identification des risques
-[Modele] = Processus, sous processus, Questionnaire Identification des risques, Dispositif de maitrise des risques attendus
-[Nb de lignes] = 50`
+            id: 'stocks-cc20',
+            label: 'CC20 - Test sur la centralisation',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC20
+[reference] = Test sur la centralisation
+[Nb de lignes] = 10`
           },
           {
-            id: 'identification-risques',
-            label: 'Identification des risques',
-            icon: <AlertTriangle className="w-4 h-4" />,
-            command: `[Command] = Etape de mission
-[Processus] = rapprochements bancaires
-[Etape précédente] = Question Identification des risques
-[Etape de mission] = Identification des risques
-[Modele] = sous processus, Point de controle, risque
-[Nb de lignes] = 50`
+            id: 'stocks-cc30',
+            label: 'CC30 - Test Stock Physique Inventorié',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC30
+[reference] = Test Stock Physique Inventorié
+[Nb de lignes] = 10`
           },
           {
-            id: 'evaluation-risques',
-            label: 'Évaluation des risques',
-            icon: <BarChart3 className="w-4 h-4" />,
-            command: `[Command] = Etape de mission
-[Processus] = rapprochements bancaires
-[Etape précédente] = Identification des risques
-[Etape de mission] = Evaluation des risques
-[Modele] = Point de controle, risque, évaluation risque, probabilité, impact
-[Nb de lignes] = 50`
+            id: 'stocks-cc104',
+            label: 'CC104 - Test la variation stock',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC104
+[reference] = Test la variation stock
+[Nb de lignes] = 10`
           },
           {
-            id: 'plan-action-couverture',
-            label: 'Plan d\'action de couverture des risques',
-            icon: <CheckSquare className="w-4 h-4" />,
-            command: `[Command] = Etape de mission
-[Processus] = rapprochements bancaires
-[Etape précédente] = Evaluation des risques
-[Etape de mission] = Plan d'action de couverture des risques
-[Modele] = Point de controle, risque, évaluation risque, probabilité, impact, Plan d'action de couverture des risques
-[Nb de lignes] = 50`
+            id: 'stocks-cc145',
+            label: 'CC145 - Valorisation en CUMP',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC145
+[reference] = Valorisation en CUMP
+[Nb de lignes] = 10`
           },
           {
-            id: 'mise-a-jour-cartographie',
-            label: 'Mise à jour cartographie N-1',
+            id: 'stocks-cc300',
+            label: 'CC300 - Provisions Dépréciation',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC300
+[reference] = Provisions Dépréciation
+[Nb de lignes] = 10`
+          }
+        ]
+      },
+      {
+        id: 'controle-comptes-immobilisations',
+        label: 'Immobilisations',
+        etapes: [
+          {
+            id: 'immobilisations-dd040',
+            label: 'DD040 - Tableau Mouvement immobilisations',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD040
+[reference] = Tableau Mouvement immobilisations
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd104',
+            label: 'DD104 - Test acquisitions',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD104
+[reference] = Test acquisitions
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd120',
+            label: 'DD120 - Test sur les cessions',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD120
+[reference] = Test sur les cessions
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd145',
+            label: 'DD145 - Test dotation aux amortissements',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD145
+[reference] = Test dotation aux amortissements
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd180',
+            label: 'DD180 - Test entretien charges',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD180
+[reference] = Test entretien charges
+[Nb de lignes] = 10`
+          },
+          // CYCLE CLIENTS
+          {
+            id: 'clients-fe040',
+            label: 'FE040 - Circularisation client',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE040
+[reference] = Circularisation client
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe200',
+            label: 'FE200 - Procédure alternative',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE200
+[reference] = Procédure alternative
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe300',
+            label: 'FE300 - Test de séparation des exercices Client',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE300
+[reference] = Test de séparation des exercices Client
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe345',
+            label: 'FE345 - Créances provisionnées',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE345
+[reference] = Créances provisionnées
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe360',
+            label: 'FE360 - Revue Balance agée',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE360
+[reference] = Revue Balance agée
+[Nb de lignes] = 10`
+          },
+          // CYCLE FOURNISSEURS
+          {
+            id: 'fournisseurs-ff040',
+            label: 'FF040 - Circularisation fournisseurs',
             icon: <FileText className="w-4 h-4" />,
-            command: `[Command] = Etape de mission
-[Processus] = rapprochements bancaires
-[Etape précédente] = Cartographie des risques N-1
-[Etape de mission] = Cartographie des risques
-[Modele] = Point de controle, risque, évaluation risque, probabilité, impact, controle audit
-[Extension] = objectif de controle, document
-[Nb de lignes] = 50`
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF040
+[reference] = Circularisation fournisseurs
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff200',
+            label: 'FF200 - Procédure alternative FRS',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF200
+[reference] = Procédure alternative FRS
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff300',
+            label: 'FF300 - Test de séparation des exercices Fournisseurs',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF300
+[reference] = Test de séparation des exercices Fournisseurs
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff400',
+            label: 'FF400 - Test PCA CCA',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF400
+[reference] = Test PCA CCA
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff445',
+            label: 'FF445 - Test charges récurrentes',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF445
+[reference] = Test charges récurrentes
+[Nb de lignes] = 10`
+          },
+          // CYCLE PERSONNEL
+          {
+            id: 'personnel-fp040',
+            label: 'FP040 - Test Cotisations Fiscales',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP040
+[reference] = Test Cotisations Fiscales
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp45',
+            label: 'FP45 - Rapprochement de solde BG-livre de paie',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP45
+[reference] = Rapprochement de solde BG-livre de paie
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp104',
+            label: 'FP104 - Test Cotisations sociales',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP104
+[reference] = Test Cotisations sociales
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp130',
+            label: 'FP130 - Validation base imposable',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP130
+[reference] = Validation base imposable
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp145',
+            label: 'FP145 - Travaux analytiques salaire',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP145
+[reference] = Travaux analytiques salaire
+[Nb de lignes] = 10`
+          },
+          // CYCLE CAPITAUX PROPRES
+          {
+            id: 'capitaux-fq200',
+            label: 'FQ200 - Emprunts et dettes',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ200
+[reference] = Emprunts et dettes
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'capitaux-fq300',
+            label: 'FQ300 - Tableau provision RC',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ300
+[reference] = Tableau provision RC
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'capitaux-fq400',
+            label: 'FQ400 - Subventions',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ400
+[reference] = Subventions
+[Nb de lignes] = 10`
+          },
+          // CYCLE CHARGES D'EXPLOITATION
+          {
+            id: 'charges-mm042',
+            label: 'MM042 - TEST DETAIL PUB',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM042
+[reference] = TEST DETAIL PUB
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm200',
+            label: 'MM200 - Test sur les charges prestations',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM200
+[reference] = Test sur les charges prestations
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm245',
+            label: 'MM245 - Test TSE',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM245
+[reference] = Test TSE
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm300',
+            label: 'MM300 - Test patentes',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM300
+[reference] = Test patentes
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm400',
+            label: 'MM400 - Test impôt Foncier',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM400
+[reference] = Test impôt Foncier
+[Nb de lignes] = 10`
+          },
+          // CYCLE IMPÔTS ET TAXES
+          {
+            id: 'impots-nn040',
+            label: 'NN040 - Rapprochement de solde TVA - CA',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN040
+[reference] = Rapprochement de solde TVA - CA
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn200',
+            label: 'NN200 - Test CN',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN200
+[reference] = Test CN
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn220',
+            label: 'NN220 - Test IGR',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN220
+[reference] = Test IGR
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn245',
+            label: 'NN245 - Test IRC',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN245
+[reference] = Test IRC
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn300',
+            label: 'NN300 - Test IRVM',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN300
+[reference] = Test IRVM
+[Nb de lignes] = 10`
+          }
+        ]
+      },
+      {
+        id: 'synthese-mission',
+        label: 'Synthèse de mission',
+        etapes: [
+          {
+            id: 'synthese-travaux',
+            label: 'Synthèse des travaux',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = Synthèse des travaux
+[Mission] = 
+[Période] = 
+[Conclusions] = `
+          },
+          {
+            id: 'points-attention',
+            label: "Points d'attention",
+            icon: <AlertTriangle className="w-4 h-4" />,
+            command: `[Command] = Points d'attention
+[Domaine] = 
+[Risque] = 
+[Recommandation] = `
+          },
+          {
+            id: 'rapport-synthese',
+            label: 'Rapport de synthèse',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = Rapport de synthèse
+[Mission] = 
+[Conclusions] = 
+[Recommandations] = `
           }
         ]
       }
@@ -1723,6 +1516,8 @@ const getModeIcon = (modeId: string) => {
     case 'normal': return <User className="w-4 h-4" />;
     case 'demo': return <Play className="w-4 h-4" />;
     case 'avance': return <Zap className="w-4 h-4" />;
+    case 'intelligent': return <Brain className="w-4 h-4" />;
+    case 'manuel': return <Settings className="w-4 h-4" />;
     default: return null;
   }
 };
@@ -1743,14 +1538,24 @@ const SubMenuPortal: React.FC<SubMenuPortalProps> = ({ etape, anchorRect, onMode
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        onClose();
-      }
+      // Utiliser un délai pour laisser le click se propager d'abord
+      setTimeout(() => {
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+          // Ne pas fermer si on clique sur le menu principal
+          const target = event.target as HTMLElement;
+          if (!target.closest('[data-demarrer-menu]') && !target.closest('[data-submenu-portal]')) {
+            onClose();
+          }
+        }
+      }, 0);
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    // Utiliser click au lieu de mousedown pour éviter de fermer avant le traitement du clic
+    document.addEventListener('click', handleClickOutside, true);
+    return () => document.removeEventListener('click', handleClickOutside, true);
   }, [onClose]);
+
+  // Calculer la position du sous-menu
   const style: React.CSSProperties = {
     position: 'fixed',
     top: anchorRect.top,
@@ -1758,6 +1563,7 @@ const SubMenuPortal: React.FC<SubMenuPortalProps> = ({ etape, anchorRect, onMode
     zIndex: 9999,
   };
 
+  // Vérifier si le menu dépasse à droite de l'écran
   if (anchorRect.right + 200 > window.innerWidth) {
     style.left = anchorRect.left - 200 - 4;
   }
@@ -1785,11 +1591,13 @@ const SubMenuPortal: React.FC<SubMenuPortalProps> = ({ etape, anchorRect, onMode
           type="button"
           className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#6b1102]/10 dark:hover:bg-[#6b1102]/20 hover:text-[#6b1102] dark:hover:text-[#ff6b5b] transition-colors"
           onMouseDown={(e) => {
+            // Empêcher la propagation du mousedown pour éviter la fermeture
             e.stopPropagation();
           }}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log('[SubMenuPortal] Mode button clicked:', mode.label);
             onModeClick(mode);
           }}
         >
@@ -1817,11 +1625,14 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
   const [etapeAnchorRect, setEtapeAnchorRect] = useState<DOMRect | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Fermer le menu si clic en dehors
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node) &&
           buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
         const target = event.target as HTMLElement;
+        // Ne pas fermer si on clique sur le sous-menu
         if (!target.closest('[data-submenu-portal]')) {
           closeMenu();
         }
@@ -1837,6 +1648,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
     };
   }, [isOpen]);
 
+  // Fermer avec Escape
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -1857,8 +1669,6 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
     setIsOpen(false);
     setActiveLogiciel(null);
     setActiveEtape(null);
-    setActiveCycle(null);
-    setActiveTest(null);
     setEtapeAnchorRect(null);
   };
 
@@ -1882,20 +1692,30 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
   };
 
   const handleModeClick = (mode: ModeItem) => {
+    console.log('[DemarrerMenu] handleModeClick called with mode:', mode);
+    console.log('[DemarrerMenu] activeEtape:', activeEtape);
+    
     if (activeEtape) {
       const finalCommand = mode.prefix + activeEtape.command;
+      console.log('[DemarrerMenu] Final command to insert:', finalCommand);
       
+      // Appeler onInsertCommand AVANT de fermer le menu
       try {
         onInsertCommand(finalCommand);
+        console.log('[DemarrerMenu] onInsertCommand called successfully');
       } catch (error) {
         console.error('[DemarrerMenu] Error calling onInsertCommand:', error);
       }
       
+      // Fermer le menu après un court délai pour s'assurer que l'insertion est faite
       setTimeout(() => {
         closeMenu();
       }, 100);
+    } else {
+      console.warn('[DemarrerMenu] No activeEtape, cannot insert command');
     }
   };
+
   const handleCycleClick = (cycle: CycleComptable) => {
     if (activeCycle?.id === cycle.id) {
       setActiveCycle(null);
@@ -1912,6 +1732,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
       setActiveTest(null);
       setEtapeAnchorRect(null);
     } else {
+      // Créer un objet EtapeItem à partir du TestItem pour la compatibilité
       const etapeFromTest: EtapeItem = {
         id: test.id,
         label: `${test.reference} - ${test.label}`,
@@ -1926,6 +1747,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
 
   return (
     <div className="relative">
+      {/* Bouton Démarrer - Rouge bordeaux */}
       <button
         ref={buttonRef}
         onClick={toggleMenu}
@@ -1943,6 +1765,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
         <span>Démarrer</span>
       </button>
 
+      {/* Menu déroulant principal */}
       {isOpen && (
         <div
           ref={menuRef}
@@ -1950,6 +1773,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
           className="absolute bottom-full mb-2 left-0 min-w-[280px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
           style={{ maxHeight: '70vh' }}
         >
+          {/* Header - Rouge bordeaux */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-[#6b1102] to-[#8b2112]">
             <div className="flex items-center gap-2 text-white">
               <Play className="w-5 h-5 fill-white" />
@@ -1962,9 +1786,12 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
               <X className="w-4 h-4" />
             </button>
           </div>
+
+          {/* Contenu du menu */}
           <div className="py-1 max-h-[60vh] overflow-y-auto">
             {MENU_DATA.map(logiciel => (
               <div key={logiciel.id}>
+                {/* Logiciel */}
                 <button
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors border-b border-gray-100 dark:border-gray-700/50
                     ${activeLogiciel === logiciel.id 
@@ -1974,8 +1801,6 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
                   onClick={() => {
                     setActiveLogiciel(activeLogiciel === logiciel.id ? null : logiciel.id);
                     setActiveEtape(null);
-                    setActiveCycle(null);
-                    setActiveTest(null);
                     setEtapeAnchorRect(null);
                   }}
                 >
@@ -1986,14 +1811,17 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
                   <ChevronRight className={`w-4 h-4 flex-shrink-0 transition-transform duration-200 ${activeLogiciel === logiciel.id ? 'rotate-90 text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-400'}`} />
                 </button>
 
+                {/* Phases et Étapes */}
                 {activeLogiciel === logiciel.id && (
                   <div className="bg-gray-50 dark:bg-gray-900/50">
                     {logiciel.phases.map(phase => (
                       <div key={phase.id}>
+                        {/* Phase (titre) */}
                         <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-800/50">
                           {phase.label}
                         </div>
                         
+                        {/* Étapes ou Cycles */}
                         {phase.etapes && phase.etapes.map(etape => (
                           <button
                             key={etape.id}
@@ -2011,6 +1839,8 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
                             <ChevronRight className={`w-4 h-4 flex-shrink-0 text-gray-400 ${activeEtape?.id === etape.id ? 'text-[#6b1102] dark:text-[#ff6b5b]' : ''}`} />
                           </button>
                         ))}
+                        
+                        {/* Cycles comptables */}
                         {phase.cycles && phase.cycles.map(cycle => (
                           <div key={cycle.id}>
                             <button
@@ -2028,6 +1858,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
                               <ChevronRight className={`w-4 h-4 flex-shrink-0 transition-transform duration-200 ${activeCycle?.id === cycle.id ? 'rotate-90 text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-400'}`} />
                             </button>
                             
+                            {/* Tests du cycle */}
                             {activeCycle?.id === cycle.id && (
                               <div className="bg-gray-100 dark:bg-gray-800/30">
                                 {cycle.tests.map(test => (
@@ -2061,6 +1892,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
         </div>
       )}
 
+      {/* Sous-menu des modes (portail) */}
       {activeEtape && etapeAnchorRect && (
         <SubMenuPortal
           etape={activeEtape}

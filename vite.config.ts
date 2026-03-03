@@ -89,6 +89,7 @@ export default defineConfig({
   plugins: [react(), copyPdfWorker(), webContainerHeaders()],
   optimizeDeps: {
     exclude: ['lucide-react'],
+    entries: ['index.html'], // Scanner uniquement index.html, pas les fichiers de test
   },
   base: process.env.ELECTRON_START_URL ? '/' : './',
   server: {

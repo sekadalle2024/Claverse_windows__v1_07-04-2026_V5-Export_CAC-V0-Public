@@ -123,17 +123,450 @@
         },
         // E-revision
         'E-revision': {
-            'Contrôle des comptes': {
-                'Revue analytique': {
+            'Revue analytique': {
+                'Revue analytique générale': {
                     command: `[Command] = Revue analytique
-[Compte] = 
-[Période] = `,
+[Processus] = 
+[Période] = 
+[Objectif] = `,
                     submenu: ['Normal', 'Avancé', 'Intelligent', 'Manuel']
                 },
-                'Tests de détail': {
-                    command: `[Command] = Tests de détail
+                'Analyse des variations': {
+                    command: `[Command] = Analyse des variations
 [Compte] = 
-[Échantillon] = `,
+[Période] = 
+[Seuil] = `,
+                    submenu: ['Normal', 'Avancé', 'Intelligent', 'Manuel']
+                }
+            },
+            'Contrôle des comptes': {
+                // CYCLE TRÉSORERIE
+                'Trésorerie': {
+                    'AA040 - test sur la validation du compte caisse': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA040
+[reference] = test sur la validation du compte caisse
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'AA145 - Test sur les décaissements après la clôture': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA145
+[reference] = Test sur les décaissements après la clôture
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'AA160 - Test sur les décaissements avant la clôture': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA160
+[reference] = Test sur les décaissements avant la clôture
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'AA200 - Caisse': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA200
+[reference] = Caisse
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'AA400 - Suspens Banque': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA400
+[reference] = Suspens Banque
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE VENTES
+                'Ventes': {
+                    'BB040 - Rapprochement CA': {
+                        command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB040
+[reference] = Rapprochement CA
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'BB145 - Test de séparation des exercices ventes': {
+                        command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB145
+[reference] = Test de séparation des exercices ventes
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'BB160 - Test de séparation des exercices avoir': {
+                        command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB160
+[reference] = Test de séparation des exercices avoir
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'BB300 - Test de validation analytique': {
+                        command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB300
+[reference] = Test de validation analytique
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE STOCKS
+                'Stocks': {
+                    'CC20 - Test sur la centralisation': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Stock
+[test] = CC20
+[reference] = Test sur la centralisation
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'CC30 - Test Stock Physique Inventorié': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Stock
+[test] = CC30
+[reference] = Test Stock Physique Inventorié
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'CC104 - Test la variation stock': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Stock
+[test] = CC104
+[reference] = Test la variation stock
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'CC145 - Valorisation en CUMP': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Stock
+[test] = CC145
+[reference] = Valorisation en CUMP
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'CC300 - Provisions Dépréciation': {
+                        command: `[Command] = /feuille couverture
+[Processus] = Stock
+[test] = CC300
+[reference] = Provisions Dépréciation
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE IMMOBILISATIONS
+                'Immobilisations': {
+                    'DD040 - Tableau Mouvement immobilisations': {
+                        command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD040
+[reference] = Tableau Mouvement immobilisations
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'DD104 - Test acquisitions': {
+                        command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD104
+[reference] = Test acquisitions
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'DD120 - Test sur les cessions': {
+                        command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD120
+[reference] = Test sur les cessions
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'DD145 - Test dotation aux amortissements': {
+                        command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD145
+[reference] = Test dotation aux amortissements
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'DD180 - Test entretien charges': {
+                        command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD180
+[reference] = Test entretien charges
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE CLIENTS
+                'Clients': {
+                    'FE040 - Circularisation client': {
+                        command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE040
+[reference] = Circularisation client
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FE200 - Procédure alternative': {
+                        command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE200
+[reference] = Procédure alternative
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FE300 - Test de séparation des exercices Client': {
+                        command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE300
+[reference] = Test de séparation des exercices Client
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FE345 - Créances provisionnées': {
+                        command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE345
+[reference] = Créances provisionnées
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FE360 - Revue Balance agée': {
+                        command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE360
+[reference] = Revue Balance agée
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE FOURNISSEURS
+                'Fournisseurs': {
+                    'FF040 - Circularisation fournisseurs': {
+                        command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF040
+[reference] = Circularisation fournisseurs
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FF200 - Procédure alternative FRS': {
+                        command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF200
+[reference] = Procédure alternative FRS
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FF300 - Test de séparation des exercices Fournisseurs': {
+                        command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF300
+[reference] = Test de séparation des exercices Fournisseurs
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FF400 - Test PCA CCA': {
+                        command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF400
+[reference] = Test PCA CCA
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FF445 - Test charges récurrentes': {
+                        command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF445
+[reference] = Test charges récurrentes
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE PERSONNEL
+                'Personnel': {
+                    'FP040 - Test Cotisations Fiscales': {
+                        command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP040
+[reference] = Test Cotisations Fiscales
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FP45 - Rapprochement de solde BG-livre de paie': {
+                        command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP45
+[reference] = Rapprochement de solde BG-livre de paie
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FP104 - Test Cotisations sociales': {
+                        command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP104
+[reference] = Test Cotisations sociales
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FP130 - Validation base imposable': {
+                        command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP130
+[reference] = Validation base imposable
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FP145 - Travaux analytiques salaire': {
+                        command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP145
+[reference] = Travaux analytiques salaire
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE CAPITAUX PROPRES
+                'Capitaux propres': {
+                    'FQ200 - Emprunts et dettes': {
+                        command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ200
+[reference] = Emprunts et dettes
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FQ300 - Tableau provision RC': {
+                        command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ300
+[reference] = Tableau provision RC
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'FQ400 - Subventions': {
+                        command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ400
+[reference] = Subventions
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE CHARGES D'EXPLOITATION
+                'Charges d\'exploitation': {
+                    'MM042 - TEST DETAIL PUB': {
+                        command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM042
+[reference] = TEST DETAIL PUB
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'MM200 - Test sur les charges prestations': {
+                        command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM200
+[reference] = Test sur les charges prestations
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'MM245 - Test TSE': {
+                        command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM245
+[reference] = Test TSE
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'MM300 - Test patentes': {
+                        command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM300
+[reference] = Test patentes
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'MM400 - Test impôt Foncier': {
+                        command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM400
+[reference] = Test impôt Foncier
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                },
+                // CYCLE IMPÔTS ET TAXES
+                'Impôts et taxes': {
+                    'NN040 - Rapprochement de solde TVA - CA': {
+                        command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN040
+[reference] = Rapprochement de solde TVA - CA
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'NN200 - Test CN': {
+                        command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN200
+[reference] = Test CN
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'NN220 - Test IGR': {
+                        command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN220
+[reference] = Test IGR
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'NN245 - Test IRC': {
+                        command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN245
+[reference] = Test IRC
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    },
+                    'NN300 - Test IRVM': {
+                        command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN300
+[reference] = Test IRVM
+[Nb de lignes] = 10`,
+                        submenu: ['Normal', 'Demo']
+                    }
+                }
+            },
+            'Synthèse de mission': {
+                'Synthèse des travaux': {
+                    command: `[Command] = Synthèse des travaux
+[Mission] = 
+[Période] = 
+[Conclusions] = `,
+                    submenu: ['Normal', 'Avancé', 'Intelligent', 'Manuel']
+                },
+                'Points d\'attention': {
+                    command: `[Command] = Points d'attention
+[Domaine] = 
+[Risque] = 
+[Recommandation] = `,
+                    submenu: ['Normal', 'Avancé', 'Intelligent', 'Manuel']
+                },
+                'Rapport de synthèse': {
+                    command: `[Command] = Rapport de synthèse
+[Mission] = 
+[Conclusions] = 
+[Recommandations] = `,
                     submenu: ['Normal', 'Avancé', 'Intelligent', 'Manuel']
                 }
             }
@@ -732,8 +1165,10 @@
                 const mode = subItem.dataset.mode;
                 let command = decodeURIComponent(subItem.dataset.command);
 
-                // Ajouter le mode si ce n'est pas "Normal"
-                if (mode !== 'Normal') {
+                // Ajouter le mode selon le type
+                if (mode === 'Demo') {
+                    command = `${command}\n[Demo] = Activate`;
+                } else if (mode !== 'Normal') {
                     command = `[Mode] = ${mode}\n${command}`;
                 }
 

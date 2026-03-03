@@ -18,6 +18,9 @@ temp/
 *.tmp
 *.temp
 
+# Test HTML files (moved to avoid Vite scan errors)
+tests-html/
+
 # Debug screenshots et images de test (mais pas les assets du projet)
 # Exclure les images de debug à la racine uniquement
 /*.jpg
