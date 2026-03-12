@@ -141,9 +141,9 @@ const MENU_DATA: LogicielItem[] = [
 [Etape précédente] = Cartographie des risques
 [Etape de mission] = Collecte documentaire
 [Modele] : Processus, document, Direction, operationnel
-[Nb de lignes] = 30
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 30`
               }
             ]
           },
@@ -170,9 +170,9 @@ const MENU_DATA: LogicielItem[] = [
 [Etape précédente] = Collecte documentaire
 [Etape de mission] = Questionnaire prise de connaissance
 [Modele] : Processus, sous processus, Questionnaire de prise de connaissance
-[Nb de lignes] = 30
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 30`
               }
             ]
           },
@@ -199,9 +199,9 @@ const MENU_DATA: LogicielItem[] = [
 [Etape précédente] = Questionnaire prise de connaissance
 [Etape de mission] = Cartographie des processus
 [Modele] : Cycle, Processus, sous processus, operations
-[Nb de lignes] = 30
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 30`
               }
             ]
           },
@@ -225,9 +225,9 @@ const MENU_DATA: LogicielItem[] = [
 [Modele] : operationnel, risque, évaluation risque, probabilité, impact, controle audit
 [Matrice de criticite] = Matrice numerique - 5 niveau
 [Integration] = integration_min
-[Nb de lignes] = 40
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 40`
               }
             ]
           },
@@ -254,9 +254,9 @@ const MENU_DATA: LogicielItem[] = [
 [Etape précédente] = Cartographie des risques
 [Etape de mission] = Referentiel de controle interne
 [Modele] : Processus, Tache clé, objectif de contrôle, risques, contrôles clé
-[Nb de lignes] = 30
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 30`
               }
             ]
           },
@@ -283,9 +283,9 @@ const MENU_DATA: LogicielItem[] = [
 [Etape précédente] = Referentiel de controle interne
 [Etape de mission] = Rapport d'orientation
 [Modele] : Processus, Objectifs generaux de contrôle interne, Objectifs spécifiques
-[Nb de lignes] = 30
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 30`
               }
             ]
           },
@@ -309,10 +309,10 @@ const MENU_DATA: LogicielItem[] = [
 [Modele] : Point de controle, Risque, assertion, anomalie courantes, document
 [Extension] = objectif de controle, document
 [Integration] = integration_min
-[Nb de lignes] = 20
 [Directive] = Cibler uniquement les operations d'inventaire de caisse en priorite
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 20`
               }
             ]
           }
@@ -331,8 +331,8 @@ const MENU_DATA: LogicielItem[] = [
 [Processus] = Sécurité trésorerie
 [Contrôle] = Verifier l exhaustivite des inventaires de caisse
 [Instruction] = Template
-[Nb de lignes] = 15
-[Modele de test] = no, compte, site, libelle, solde BG, Solde Pv inventaire`
+[Modele de test] = no, compte, site, libelle, solde BG, Solde Pv inventaire
+[Nb de lignes] = 15`
           }
         ]
       },
@@ -467,8 +467,8 @@ const MENU_DATA: LogicielItem[] = [
 [Modele] : Sous processus, Objectif de contrôle, Taches cle, Questionnaire identification risque, Assertion, Dispositif de maitrises des risques du client, Contrôle cle attendus, references documentaire, Anomalies, Conclusion
 [Directive] = Remplir toutes les colonnes en simulant des lignes satisfaisante t des lignes non satisfaisantes
 [Integration] = Design
-[Nb de lignes] = 10
-[Demo] = Activate`
+[Demo] = Activate
+[Nb de lignes] = 10`
               }
             ]
           },
@@ -509,8 +509,8 @@ Contenu de [Contexte de base]
 { "Etape mission - Design": [ { "table 1": { "Etape": "Programme de travail / Questionnaire de Contrôle Interne", "Normes": "Norme 2240 - Programme de travail de la mission", "Reference": "PRG-TRESO-002", "Methode": "Méthode des assertions par les objectifs de contrôle" } }, { "table 2": [ { "no": 1, "Sous processus": "Organisation et Séparation des tâches", "Objectif de contrôle": "Garantir l'indépendance de la fonction de rapprochement bancaire.", "Taches cle": "Définition des rôles", "Questionnaire identification risque": "La personne effectuant le rapprochement est-elle indépendante de la tenue de la caisse et de l'émission des paiements ?", "Assertion": "Séparation des exercices", "Dispositif de maitrises des risques du client": "Le comptable fournisseurs effectue les paiements et réalise également le rapprochement bancaire sur le logiciel Sage.", "Contrôle cle attendus": "Le Responsable Administratif et Financier s'assure que l'agent en charge du rapprochement n'a pas accès aux moyens de paiement ni aux écritures de caisse.", "references documentaire": "Fiches de poste, Matrice des droits d'accès SI", "Anomalies": "Cumul de fonctions incompatible créant un risque de dissimulation de fraude.", "Conclusion": "Non-Satisfaisant" } ] } ] }
 [Modele] : Objectif de contrôle, Travaux a effectuer, Resultat, Tableau de test , Document de test, Echantillon, Conclusion
 [Integration] = Implementation_modelisation
-[Nb de lignes] = 25
-[Demo] = Activate`
+[Demo] = Activate
+[Nb de lignes] = 25`
               }
             ]
           },
@@ -541,8 +541,8 @@ Contenu de [Contexte de base]
 [Contexte de base]
 [Modelisation] : les informations des rapprochements bancaires
 [Integration] = Implementation_cartographie
-[Nb de lignes] = 25
-[Demo] = Activate`
+[Demo] = Activate
+[Nb de lignes] = 25`
               }
             ]
           },
@@ -571,8 +571,8 @@ Contenu de [Contexte de base]
 [Contexte de base]
 [Modelisation] : les informations des rapprochements bancaires
 [Integration] = Implementation_programme_controle
-[Nb de lignes] = 25
-[Demo] = Activate`
+[Demo] = Activate
+[Nb de lignes] = 25`
               }
             ]
           },
@@ -2128,9 +2128,9 @@ Contenu de [Contexte de base]
 [Etape précédente] = Prise de connaissance
 [Etape de mission] = Cartographie des processus
 [Modele] = Cycle, processus, sous processus, operations
-[Nb de lignes] = 50
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 50`
               }
             ]
           },
@@ -2157,9 +2157,9 @@ Contenu de [Contexte de base]
 [Etape précédente] = Cartographie des processus
 [Etape de mission] = Question Identification des risques
 [Modele] = Processus, sous processus, Questionnaire Identification des risques, Dispositif de maitrise des risques attendus
-[Nb de lignes] = 50
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 50`
               }
             ]
           },
@@ -2186,9 +2186,9 @@ Contenu de [Contexte de base]
 [Etape précédente] = Question Identification des risques
 [Etape de mission] = Identification des risques
 [Modele] = sous processus, Point de controle, risque
-[Nb de lignes] = 50
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 50`
               }
             ]
           },
@@ -2215,9 +2215,9 @@ Contenu de [Contexte de base]
 [Etape précédente] = Identification des risques
 [Etape de mission] = Evaluation des risques
 [Modele] = Point de controle, risque, évaluation risque, probabilité, impact
-[Nb de lignes] = 50
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 50`
               }
             ]
           },
@@ -2244,9 +2244,9 @@ Contenu de [Contexte de base]
 [Etape précédente] = Evaluation des risques
 [Etape de mission] = Plan d'action de couverture des risques
 [Modele] = Point de controle, risque, évaluation risque, probabilité, impact, Plan d'action de couverture des risques
-[Nb de lignes] = 50
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 50`
               }
             ]
           },
@@ -2275,9 +2275,9 @@ Contenu de [Contexte de base]
 [Etape de mission] = Cartographie des risques
 [Modele] = Point de controle, risque, évaluation risque, probabilité, impact, controle audit
 [Extension] = objectif de controle, document
-[Nb de lignes] = 50
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 50`
               }
             ]
           }
@@ -2346,9 +2346,9 @@ Contenu de [Contexte de base]
 [Etape de mission] = Matrice de surveillance permanente
 [Modele] = Point de controle, risque, controle de premier niveau, controle de second niveau, document
 [Directives] = 
-[Nb de lignes] = 50
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 50`
               }
             ]
           }
@@ -2371,8 +2371,8 @@ Contenu de [Contexte de base]
 [Processus] = Sécurité trésorerie
 [Contrôle] = Verifier l exhaustivite des inventaires de caisse
 [Instruction] = Template
-[Nb de lignes] = 15
-[Modele de test] = no, compte, site, libelle, solde BG, Solde Pv inventaire`
+[Modele de test] = no, compte, site, libelle, solde BG, Solde Pv inventaire
+[Nb de lignes] = 15`
               },
               {
                 id: 'avance',
@@ -2381,10 +2381,10 @@ Contenu de [Contexte de base]
 [Processus] = Sécurité trésorerie
 [Contrôle] = Verifier l exhaustivite des inventaires de caisse
 [Instruction] = Template
-[Nb de lignes] = 15
 [Modele de test] = no, compte, site, libelle, solde BG, Solde Pv inventaire
 [Variable 1] = Contenu de [Variable 1]
-[Variable 2] = Contenu de [Variable 2]`
+[Variable 2] = Contenu de [Variable 2]
+[Nb de lignes] = 15`
               }
             ]
           }
