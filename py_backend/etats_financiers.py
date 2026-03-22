@@ -52,72 +52,31 @@ def format_number(x: float) -> str:
         return str(x)
 
 
-def load_tableau_correspondance(file_path: str = "py_backend/Tableau correspondance.xlsx") -> Dict[str, List[Dict]]:
+def load_tableau_correspondance(file_path: str = "correspondances_syscohada.json") -> Dict[str, List[Dict]]:
     """
-    Charge le tableau de correspondance postes/comptes.
+    Charge le tableau de correspondance postes/comptes depuis un fichier JSON.
     Retourne un dictionnaire avec les sections : bilan_actif, bilan_passif, charges, produits
     """
+    # Vérifier si le fichier existe
+    if not os.path.exists(file_path):
+        # Essayer avec le chemin absolu depuis la racine
+        alt_path = os.path.join(os.path.dirname(__file__), file_path)
+        if os.path.exists(alt_path):
+            file_path = alt_path
+        else:
+            logger.error(f"❌ Fichier non trouvé: {file_path}")
+            logger.error(f"❌ Chemin alternatif non trouvé: {alt_path}")
+            logger.error(f"❌ Répertoire courant: {os.getcwd()}")
+            raise FileNotFoundError(f"Tableau de correspondance non trouvé: {file_path}")
+    
     logger.info(f"📂 Chargement du tableau de correspondance: {file_path}")
     
     try:
-        df = pd.read_excel(file_path, sheet_name=0, header=None)
-        logger.info(f"📊 Tableau chargé: {len(df)} lignes")
-        
-        # Structure pour stocker les correspondances
-        correspondances = {
-            'bilan_actif': [],
-            'bilan_passif': [],
-            'charges': [],
-            'produits': []
-        }
-        
-        current_section = None
-        
-        for idx, row in df.iterrows():
-            # Colonnes: 0=Réf, 1=Libellé, 2=Comptes
-            ref = str(row[0]).strip() if pd.notna(row[0]) else ''
-            libelle = str(row[1]).strip() if pd.notna(row[1]) else ''
-            comptes = str(row[2]).strip() if pd.notna(row[2]) else ''
-            
-            # Détecter les sections
-            if 'BILAN' in libelle.upper() and 'ACTIF' in libelle.upper():
-                current_section = 'bilan_actif'
-                logger.info(f"📍 Section détectée: BILAN ACTIF (ligne {idx})")
-                continue
-            elif 'BILAN' in libelle.upper() and 'PASSIF' in libelle.upper():
-                current_section = 'bilan_passif'
-                logger.info(f"📍 Section détectée: BILAN PASSIF (ligne {idx})")
-                continue
-            elif 'COMPTE DE RÉSULTAT' in libelle.upper() or 'COMPTE DE RESULTAT' in libelle.upper():
-                if 'CHARGE' in libelle.upper():
-                    current_section = 'charges'
-                    logger.info(f"📍 Section détectée: CHARGES (ligne {idx})")
-                elif 'PRODUIT' in libelle.upper():
-                    current_section = 'produits'
-                    logger.info(f"📍 Section détectée: PRODUITS (ligne {idx})")
-                continue
-            
-            # Ignorer les lignes d'en-tête et vides
-            if not ref or ref == 'nan' or 'Réf' in ref or len(ref) > 3:
-                continue
-            
-            # Ignorer si pas de comptes
-            if not comptes or comptes == 'nan':
-                continue
-            
-            # Parser les racines de comptes
-            racines = parse_racines_comptes(comptes)
-            
-            if racines and current_section:
-                correspondances[current_section].append({
-                    'ref': ref,
-                    'libelle': libelle,
-                    'racines': racines
-                })
-                logger.debug(f"  {ref} - {libelle}: {racines}")
+        with open(file_path, 'r', encoding='utf-8') as f:
+            correspondances = json.load(f)
         
         # Afficher les statistiques
-        logger.info(f"✅ Correspondances chargées:")
+        logger.info(f"✅ Correspondances chargées depuis JSON:")
         logger.info(f"   - Bilan Actif: {len(correspondances['bilan_actif'])} postes")
         logger.info(f"   - Bilan Passif: {len(correspondances['bilan_passif'])} postes")
         logger.info(f"   - Charges: {len(correspondances['charges'])} postes")
@@ -128,40 +87,6 @@ def load_tableau_correspondance(file_path: str = "py_backend/Tableau corresponda
     except Exception as e:
         logger.error(f"❌ Erreur lors du chargement du tableau: {e}")
         raise
-
-
-def parse_racines_comptes(comptes_str: str) -> List[str]:
-    """
-    Parse une chaîne de racines de comptes.
-    Exemples:
-    - "201, 202" → ["201", "202"]
-    - "22 – 282, 292" → ["22"]
-    - "231, 232, 233, 237, 239 p" → ["231", "232", "233", "237", "239"]
-    """
-    racines = []
-    
-    # Nettoyer la chaîne
-    comptes_str = comptes_str.replace('–', ',').replace('-', ',')
-    comptes_str = comptes_str.replace(' p', '').replace('p', '')
-    comptes_str = comptes_str.replace('(sauf', ',').replace(')', '')
-    
-    # Séparer par virgules
-    parts = comptes_str.split(',')
-    
-    for part in parts:
-        part = part.strip()
-        if not part:
-            continue
-        
-        # Extraire les chiffres
-        match = re.match(r'(\d+)', part)
-        if match:
-            racine = match.group(1)
-            # Garder seulement les racines de 1 à 4 chiffres
-            if 1 <= len(racine) <= 4:
-                racines.append(racine)
-    
-    return racines
 
 
 def match_compte_to_poste(compte: str, correspondances: List[Dict]) -> Optional[Dict]:
