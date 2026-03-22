@@ -226,6 +226,25 @@
     parentDiv.innerHTML = '';
     parentDiv.appendChild(container);
 
+    // Attacher les événements des accordéons APRÈS l'insertion dans le DOM
+    setTimeout(() => {
+      const headers = parentDiv.querySelectorAll('.section-header-ef');
+      console.log(`📋 États Financiers: ${headers.length} accordéons trouvés`);
+      
+      headers.forEach((header) => {
+        header.addEventListener('click', function() {
+          console.log('🖱️ Clic sur accordéon:', this.textContent.trim());
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          if (content) {
+            content.classList.toggle('active');
+          }
+        });
+      });
+      
+      console.log('✅ Événements des accordéons attachés');
+    }, 100);
+
     console.log("✅ Table remplacée avec les résultats");
     console.groupEnd();
 
