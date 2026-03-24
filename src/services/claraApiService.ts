@@ -34,7 +34,7 @@ export class ClaraApiService {
   // ── n8n endpoint par défaut (router switch-case) ─────────────────────────
   // L'endpoint effectif est résolu dynamiquement dans getN8nEndpoint()
   private readonly n8nDefaultEndpoint =
-    "https://j17rkv4c.rpcld.cc/webhook/template";
+    "https://t22wtwxl.rpcld.app/webhook/template";
 
   // Sentinelles internes retournées par le router pour les cas sans appel HTTP
   private readonly SENTINEL_DATABASE = "__INTERNAL__DATABASE__";
@@ -111,6 +111,15 @@ export class ClaraApiService {
     } else if (msg.includes("Etat fin")) {
       // Case 24 (États Financiers SYSCOHADA)
       routeKey = "etat_fin";
+    } else if (msg.includes("Recos contrôle interne comptable")) {
+      // Case 25 (Recos contrôle interne comptable)
+      routeKey = "recos_controle_interne";
+    } else if (msg.includes("Recos revision des comptes")) {
+      // Case 26 (Recos revision des comptes)
+      routeKey = "recos_revision_comptes";
+    } else if (msg.includes("Rapport de synthèse CAC")) {
+      // Case 27 (Rapport de synthèse CAC)
+      routeKey = "rapport_synthese_cac";
     } else if (msg.includes("Design")) {
       routeKey = "design";
     } else if (msg.includes("n8n_doc")) {
@@ -135,24 +144,24 @@ export class ClaraApiService {
       // ── Case 2 : Design ──────────────────────────────────────────
       case "design":
         console.log("🔀 Router → Case 2 : integration_windows");
-        return "https://j17rkv4c.rpcld.cc/webhook/integration_windows";
+        return "https://t22wtwxl.rpcld.app/webhook/integration_windows";
 
       // ── Case 3 : n8n_doc ────────────────────────────────────────────────
       case "n8n_doc":
         console.log("🔀 Router → Case 3 : n8n_doc");
-        return "https://fpb7ab9h.rpcl.app/webhook/n8n_doc";
+        return "https://t22wtwxl.rpcld.app/webhook/n8n_doc";
 
       // ── Case 4 : Htlm_processor ─────────────────────────────────────────
       case "htlm_processor":
         console.log("🔀 Router → Case 4 : htlm_processor");
-        return "https://j17rkv4c.rpcld.cc/webhook/htlm_processor";
+        return "https://t22wtwxl.rpcld.app/webhook/htlm_processor";
 
       // ── Case 5 / Case 10 : Database ─────────────────────────────────────
       // ── Case 10 : Database ─────────────────────────────────────
       // Case 10 => endpoint HTTP dédié
       case "database_endpoint":
         console.log("🔀 Router → Case 10 : integration_database");
-        return "https://j17rkv4c.rpcld.cc/webhook/integration_database";
+        return "https://t22wtwxl.rpcld.app/webhook/integration_database";
 
       // ── Case 11 : CIA Cours ───────────────────────────────────────────────────
       case "cia_cours":
@@ -167,17 +176,17 @@ export class ClaraApiService {
       // ── Ancien Case 11 / CIA Générique ─────────────────────────────────────────
       case "cia":
         console.log("🔀 Router → Case CIA : integration_cia");
-        return "https://j17rkv4c.rpcld.cc/webhook/integration_cia";
+        return "https://t22wtwxl.rpcld.app/webhook/integration_cia";
 
       // ── Case 6 : Algorithme ─────────────────────────────────────────────
       case "algorithme":
         console.log("🔀 Router → Case 6 : algorithme");
-        return "https://j17rkv4c.rpcld.cc/webhook/algorithme";
+        return "https://t22wtwxl.rpcld.app/webhook/algorithme";
 
       // ── Case 7 : Visualisation ──────────────────────────────────────────
       case "visualisation":
         console.log("🔀 Router → Case 7 : visualisation");
-        return "https://j17rkv4c.rpcld.cc/webhook/visualisation";
+        return "https://t22wtwxl.rpcld.app/webhook/visualisation";
 
       // ── Case 8 : Notification locale ────────────────────────────────────
       case "notification":
@@ -187,32 +196,32 @@ export class ClaraApiService {
       // ── Case 9 : Document ───────────────────────────────────────────────
       case "document":
         console.log("🔀 Router → Case 9 : integration_document");
-        return "https://j17rkv4c.rpcld.cc/webhook/integration_document";
+        return "https://t22wtwxl.rpcld.app/webhook/integration_document";
 
       // ── Case 16 : Implementation_modelisation ────────────────────────────
       case "implementation_modelisation":
         console.log("🔀 Router → Case 16 : implementation_modelisation");
-        return "https://j17rkv4c.rpcld.cc/webhook/implementation_modelisation";
+        return "https://t22wtwxl.rpcld.app/webhook/implementation_modelisation";
 
       // ── Case 17 : Implementation_programme_controle ──────────────────────
       case "implementation_programme_controle":
         console.log("🔀 Router → Case 17 : implementation_programme_controle");
-        return "https://j17rkv4c.rpcld.cc/webhook/implementation_programme_controle";
+        return "https://t22wtwxl.rpcld.app/webhook/implementation_programme_controle";
 
       // ── Case 18 : Implementation_cartographie ────────────────────────────
       case "implementation_cartographie":
         console.log("🔀 Router → Case 18 : implementation_cartographie");
-        return "https://j17rkv4c.rpcld.cc/webhook/implementation_cartographie";
+        return "https://t22wtwxl.rpcld.app/webhook/implementation_cartographie";
 
       // ── Case 19 : Programme_controle_comptes ─────────────────────────────
       case "programme_controle_comptes":
         console.log("🔀 Router → Case 19 : programme_controle_comptes");
-        return "https://j17rkv4c.rpcld.cc/webhook/programme_controle_comptes";
+        return "https://t22wtwxl.rpcld.app/webhook/programme_controle_comptes";
 
       // ── Case 20 : Revue manager ──────────────────────────────────────────
       case "revue_manager":
         console.log("🔀 Router → Case 20 : revue_manager");
-        return "https://j17rkv4c.rpcld.cc/webhook/revue_manager";
+        return "https://t22wtwxl.rpcld.app/webhook/revue_manager";
 
       // ── Case 21 : Lead_balance ───────────────────────────────────────────
       case "lead_balance":
@@ -222,17 +231,32 @@ export class ClaraApiService {
       // ── Case 22 : Règles et méthodes comptables ──────────────────────────
       case "regles_comptables":
         console.log("🔀 Router → Case 22 : regles_comptables");
-        return "https://j17rkv4c.rpcld.cc/webhook/regles_comptables";
+        return "https://t22wtwxl.rpcld.app/webhook/regles_comptables";
 
       // ── Case 23 : Recos_revision ─────────────────────────────────────────
       case "recos_revision":
         console.log("🔀 Router → Case 23 : recos_revision");
-        return "https://j17rkv4c.rpcld.cc/webhook/recos_revision";
+        return "https://t22wtwxl.rpcld.app/webhook/recos_revision";
 
       // ── Case 24 : États Financiers SYSCOHADA ─────────────────────────────
       case "etat_fin":
         console.log("🔀 Router → Case 24 : etat_fin (traitement local avec upload fichier)");
         return this.SENTINEL_ETAT_FIN;
+
+      // ── Case 25 : Recos contrôle interne comptable ───────────────────────
+      case "recos_controle_interne":
+        console.log("🔀 Router → Case 25 : recos_contrôle_interne_comptable");
+        return "https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable";
+
+      // ── Case 26 : Recos revision des comptes ─────────────────────────────
+      case "recos_revision_comptes":
+        console.log("🔀 Router → Case 26 : recos_revision_compte");
+        return "https://t22wtwxl.rpcld.app/webhook/recos_revision_compte";
+
+      // ── Case 27 : Rapport de synthèse CAC ────────────────────────────────
+      case "rapport_synthese_cac":
+        console.log("🔀 Router → Case 27 : rapport_synthese_cac");
+        return "https://t22wtwxl.rpcld.app/webhook/rapport_synthese_cac";
 
       // ── Case 1 : défaut / Standard ──────────────────────────────────────
       case "default":
@@ -885,7 +909,7 @@ export class ClaraApiService {
         const content =
           "| Database |\n" +
           "|----------|\n" +
-          "| [Ouvrir le formulaire Database](https://j17rkv4c.rpcld.cc/webhook/database) |";
+          "| [Ouvrir le formulaire Database](https://t22wtwxl.rpcld.app/webhook/database) |";
         return {
           id: `${Date.now()}-database`,
           role: "assistant",
