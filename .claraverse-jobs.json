@@ -1,4 +1,10 @@
 ﻿{
-    "Frontend":  11,
-    "Backend":  9
+    "Backend":  1,
+    "Frontend":  3,
+    "CacheCleanup":  "OK",
+    "StartTime":  {
+                      "value":  "\/Date(1774460004484)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "Wednesday, March 25, 2026 5:33:24 PM"
+                  }
 }
