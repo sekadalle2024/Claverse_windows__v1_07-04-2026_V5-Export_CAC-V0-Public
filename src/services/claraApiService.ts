@@ -163,7 +163,7 @@ export class ClaraApiService {
       // ── Case 2 : Design ──────────────────────────────────────────
       case "design":
         console.log("🔀 Router → Case 2 : integration_windows");
-        return "https://t22wtwxl.rpcld.app/webhook/integration_windows";
+        return "https://t22wtwxl.rpcld.app/webhook-test/integration_windows";
 
       // ── Case 3 : n8n_doc ────────────────────────────────────────────────
       case "n8n_doc":

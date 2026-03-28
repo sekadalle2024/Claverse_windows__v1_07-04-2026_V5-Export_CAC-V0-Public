@@ -11,6 +11,38 @@ Ce fichier trace toutes les modifications apportées au menu Démarrer depuis le
 
 ---
 
+## [27 Mars 2026] - Ajout des modes "Methodo audit" et "Guide des commandes" à E-contrôle
+
+### Ajouté
+- **Fichier** : `src/components/Clara_Components/DemarrerMenu.tsx`
+- **Nouveaux modes** :
+  1. Mode "Methodo audit" : Ajoute `[Guide Methodo] : Activate`
+  2. Mode "Guide des commandes" : Ajoute `[Guide des commandes] : Activate`
+
+### Détails
+- **Étapes enrichies** : 8 étapes dans E-contrôle
+  - Phase de préparation : Cartographie des risques, Matrice de surveillance permanente
+  - Phase de réalisation : Feuille couverture
+  - Phase de conclusion : Frap, Synthèse des Frap, Rapport provisoire, Réunion de clôture, Rapport final, Suivi des recos
+
+- **Variables positionnées** : AVANT `[Nb de lignes]` si présent
+
+### Impact
+- ✅ 8 étapes enrichies avec 2 nouveaux modes chacune
+- ✅ Aucune erreur de compilation
+- ✅ Variables insérées correctement
+
+### Documentation
+- `Doc menu demarrer/Documentation/AJOUT_MODES_E_CONTROLE_27_MARS_2026.md`
+- `00_AJOUT_MODES_E_CONTROLE_27_MARS_2026.txt`
+- `VERIFICATION_MODES_E_CONTROLE_27_MARS_2026.md`
+- `RECAP_AJOUT_MODES_E_CONTROLE_27_MARS_2026.md`
+
+### Scripts créés
+- `Doc menu demarrer/Scripts/add_modes_e_controle.py`
+
+---
+
 ## [27 Mars 2026] - Renommage "Methodo revision" pour E-revision
 
 ### Modifié
