@@ -24,9 +24,9 @@ interface RisqueItem {
   no: number;
   operationnel?: string;
   Risques: string;
-  Probabilite: 'Élevé' | 'Moyen' | 'Faible';
-  Impact: 'Élevé' | 'Moyen' | 'Faible';
-  Criticite: 'Élevé' | 'Moyen' | 'Faible';
+  Probabilite: string;  // Accepte toutes les variations
+  Impact: string;       // Accepte toutes les variations
+  Criticite: string;    // Accepte toutes les variations
   'controle audit'?: string;
   [key: string]: any;
 }
@@ -45,6 +45,24 @@ interface HeatmapData {
 
 interface HeatmapRisqueAccordionRendererProps {
   data: HeatmapData[];
+}
+
+// Fonction utilitaire pour normaliser les valeurs (Élevé, élevé, eleve, ELEVE, etc.)
+function normalizeValue(value: string): 'Élevé' | 'Moyen' | 'Faible' {
+  if (!value) return 'Faible';
+  
+  const normalized = value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, ''); // Supprime les accents
+  
+  if (/^(eleve|elevé|élevé|elev|high|fort|forte)$/i.test(normalized)) {
+    return 'Élevé';
+  } else if (/^(moyen|moyenne|medium|mod|modere|moderé|modérée)$/i.test(normalized)) {
+    return 'Moyen';
+  } else {
+    return 'Faible';
+  }
 }
 
 const HeatmapRisqueAccordionRenderer: React.FC<HeatmapRisqueAccordionRendererProps> = ({ data }) => {
@@ -160,35 +178,32 @@ interface HeatmapGridProps {
 }
 
 const HeatmapGrid: React.FC<HeatmapGridProps> = ({ repartition }) => {
-  const [selectedCell, setSelectedCell] = useState<string | null>(null);
-
   const getCellClass = (probabilite: string, impact: string): string => {
-    const key = `${probabilite}-${impact}`;
     const criticite = getCriticite(probabilite, impact);
     return `heatmap-cell heatmap-cell-${criticite.toLowerCase()}`;
   };
 
   const getCriticite = (probabilite: string, impact: string): string => {
+    // Normaliser les valeurs pour la comparaison
+    const probNorm = normalizeValue(probabilite);
+    const impactNorm = normalizeValue(impact);
+    
+    // Matrice 3x3: Faible, Moyen, Élevé
     if (
-      (probabilite === 'Élevé' && impact === 'Élevé') ||
-      (probabilite === 'Élevé' && impact === 'Moyen') ||
-      (probabilite === 'Moyen' && impact === 'Élevé')
+      (probNorm === 'Élevé' && impactNorm === 'Élevé') ||
+      (probNorm === 'Élevé' && impactNorm === 'Moyen') ||
+      (probNorm === 'Moyen' && impactNorm === 'Élevé')
     ) {
       return 'Élevé';
     } else if (
-      (probabilite === 'Moyen' && impact === 'Moyen') ||
-      (probabilite === 'Faible' && impact === 'Élevé') ||
-      (probabilite === 'Élevé' && impact === 'Faible')
+      (probNorm === 'Moyen' && impactNorm === 'Moyen') ||
+      (probNorm === 'Faible' && impactNorm === 'Élevé') ||
+      (probNorm === 'Élevé' && impactNorm === 'Faible')
     ) {
       return 'Moyen';
     } else {
       return 'Faible';
     }
-  };
-
-  const handleCellClick = (probabilite: string, impact: string) => {
-    const key = `${probabilite}-${impact}`;
-    setSelectedCell(selectedCell === key ? null : key);
   };
 
   const renderCell = (probabilite: string, impact: string) => {
@@ -200,25 +215,23 @@ const HeatmapGrid: React.FC<HeatmapGridProps> = ({ repartition }) => {
       <td
         key={key}
         className={getCellClass(probabilite, impact)}
-        onClick={() => handleCellClick(probabilite, impact)}
-        style={{ cursor: 'pointer' }}
       >
         <div className="heatmap-cell-content">
-          <div className="heatmap-cell-count">{risquesInCell.length}</div>
-          <div className="heatmap-cell-label">{criticite}</div>
-        </div>
-        {selectedCell === key && risquesInCell.length > 0 && (
-          <div className="heatmap-cell-details">
-            <strong>Risques:</strong>
-            <ul>
+          {risquesInCell.length > 0 ? (
+            <div className="heatmap-cell-risques-list">
               {risquesInCell.map((risque) => (
-                <li key={risque.no}>
-                  R{risque.no}: {risque.Risques.substring(0, 50)}...
-                </li>
+                <div key={risque.no} className="heatmap-cell-risque-item">
+                  <strong>R{risque.no}</strong>: {risque.Risques}
+                </div>
               ))}
-            </ul>
-          </div>
-        )}
+            </div>
+          ) : (
+            <div className="heatmap-cell-empty">
+              <div className="heatmap-cell-count">0</div>
+              <div className="heatmap-cell-label">{criticite}</div>
+            </div>
+          )}
+        </div>
       </td>
     );
   };
@@ -228,11 +241,10 @@ const HeatmapGrid: React.FC<HeatmapGridProps> = ({ repartition }) => {
       <table className="heatmap-grid">
         <thead>
           <tr>
-            <th className="heatmap-header-corner">Probabilité d'occurrence</th>
+            <th className="heatmap-header-corner">Probabilité / Impact</th>
             <th className="heatmap-header-impact">Faible</th>
-            <th className="heatmap-header-impact">Modérée</th>
-            <th className="heatmap-header-impact">Forte</th>
-            <th className="heatmap-header-impact">Élevée</th>
+            <th className="heatmap-header-impact">Moyen</th>
+            <th className="heatmap-header-impact">Élevé</th>
           </tr>
         </thead>
         <tbody>
@@ -241,25 +253,15 @@ const HeatmapGrid: React.FC<HeatmapGridProps> = ({ repartition }) => {
             {renderCell('Élevé', 'Faible')}
             {renderCell('Élevé', 'Moyen')}
             {renderCell('Élevé', 'Élevé')}
-            {renderCell('Élevé', 'Élevé')}
           </tr>
           <tr>
-            <th className="heatmap-header-prob">Fort</th>
+            <th className="heatmap-header-prob">Moyen</th>
             {renderCell('Moyen', 'Faible')}
             {renderCell('Moyen', 'Moyen')}
             {renderCell('Moyen', 'Élevé')}
-            {renderCell('Moyen', 'Élevé')}
-          </tr>
-          <tr>
-            <th className="heatmap-header-prob">Modéré</th>
-            {renderCell('Faible', 'Faible')}
-            {renderCell('Faible', 'Moyen')}
-            {renderCell('Faible', 'Élevé')}
-            {renderCell('Faible', 'Élevé')}
           </tr>
           <tr>
             <th className="heatmap-header-prob">Faible</th>
-            {renderCell('Faible', 'Faible')}
             {renderCell('Faible', 'Faible')}
             {renderCell('Faible', 'Moyen')}
             {renderCell('Faible', 'Élevé')}
@@ -339,7 +341,11 @@ function calculerRepartitionRisques(risques: RisqueItem[]): { [key: string]: Ris
   const repartition: { [key: string]: RisqueItem[] } = {};
 
   risques.forEach((risque) => {
-    const key = `${risque.Probabilite}-${risque.Impact}`;
+    // Normaliser les valeurs avant de créer la clé
+    const probNormalized = normalizeValue(risque.Probabilite);
+    const impactNormalized = normalizeValue(risque.Impact);
+    const key = `${probNormalized}-${impactNormalized}`;
+    
     if (!repartition[key]) {
       repartition[key] = [];
     }
