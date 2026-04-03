@@ -1,14 +1,14 @@
-# Script de déploiement complet Netlify - ClaraVerse
-# Ce script effectue le build et le déploiement sur Netlify
-# Déploiement automatique vers le projet: prclaravi
+# Script de déploiement automatique Netlify - ClaraVerse
+# Déploiement 100% automatique sans aucune interaction requise
+# Projet: prclaravi (https://prclaravi.netlify.app)
 
 param(
-    [string]$Message = "Mise a jour $(Get-Date -Format 'yyyy-MM-dd HH:mm')",
-    [string]$SiteId = "prclaravi"
+    [string]$Message = "Mise a jour $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
 )
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  DEPLOIEMENT COMPLET NETLIFY" -ForegroundColor Cyan
+Write-Host "  DEPLOIEMENT AUTOMATIQUE NETLIFY" -ForegroundColor Cyan
+Write-Host "  Projet: prclaravi" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -43,6 +43,12 @@ if ($LASTEXITCODE -ne 0) {
     Show-Error "Non authentifie sur Netlify. Executez: netlify login"
 }
 Write-Host "  Authentification: OK" -ForegroundColor Green
+
+# Vérifier le fichier de configuration
+if (-not (Test-Path "../.netlify/state.json")) {
+    Show-Error "Fichier .netlify/state.json manquant. Executez 'netlify link' d'abord"
+}
+Write-Host "  Configuration projet: OK" -ForegroundColor Green
 
 # Étape 2: Nettoyage
 Write-Host ""
@@ -87,15 +93,15 @@ foreach ($file in $essentialFiles) {
 }
 Write-Host "  Fichiers essentiels: OK" -ForegroundColor Green
 
-# Étape 5: Déploiement
+# Étape 5: Déploiement automatique
 Write-Host ""
 Write-Host "[5/5] Deploiement sur Netlify..." -ForegroundColor Yellow
-Write-Host "  Projet cible: $SiteId" -ForegroundColor Cyan
+Write-Host "  Site: prclaravi" -ForegroundColor Cyan
 Write-Host "  Upload en cours (5-8 minutes)..." -ForegroundColor Gray
 
 # Déploiement avec le site ID explicite (pas d'interaction requise)
 Set-Location ".."
-netlify deploy --prod --dir=dist --site=$SiteId --message="$Message"
+netlify deploy --prod --dir=dist --site=prclaravi --message="$Message" --auth=$env:NETLIFY_AUTH_TOKEN
 $deployResult = $LASTEXITCODE
 Set-Location "deploiement-netlify"
 
@@ -111,11 +117,11 @@ if ($deployResult -eq 0) {
     Write-Host "Prochaines etapes:" -ForegroundColor Yellow
     Write-Host "1. Tester le site en production" -ForegroundColor White
     Write-Host "2. Verifier les nouvelles fonctionnalites" -ForegroundColor White
-    Write-Host "3. Mettre a jour HISTORIQUE_DEPLOIEMENTS.md" -ForegroundColor White
+    Write-Host "3. Consulter HISTORIQUE_DEPLOIEMENTS.md" -ForegroundColor White
     
     # Enregistrer dans l'historique
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $logEntry = "[$timestamp] Deploiement reussi - $Message - Taille: $([math]::Round($distSize, 1)) MB"
+    $logEntry = "`n[$timestamp] Deploiement reussi - $Message - Taille: $([math]::Round($distSize, 1)) MB"
     Add-Content -Path "HISTORIQUE_DEPLOIEMENTS.md" -Value $logEntry
     
 } else {

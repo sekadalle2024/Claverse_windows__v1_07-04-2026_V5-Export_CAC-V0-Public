@@ -12,37 +12,49 @@ Ce dossier contient tous les scripts et la documentation nécessaires pour dépl
    - Script complet : build + déploiement
    - Vérifications automatiques
    - Gestion des erreurs
+   - **Site ID pré-configuré : prclaravi**
+   - **Aucune interaction requise**
 
-2. **`../DEPLOYER_NETLIFY.bat`** 🚀 (One-Click)
+2. **`deploy-auto.ps1`** 🤖 (Nouveau)
+   - Version alternative 100% automatique
+   - Utilise le site ID directement
+   - Pas de demande de login ou nom de projet
+
+3. **`../DEPLOYER_NETLIFY.bat`** 🚀 (One-Click)
    - Situé à la racine du projet
    - Lance le déploiement complet en un seul clic
    - Idéal pour les mises à jour récurrentes
 
-2. **`deploy-rapide.ps1`**
+4. **`deploy-rapide.ps1`**
    - Déploiement rapide (sans rebuild)
    - Utilise le dossier dist/ existant
 
-3. **`build-only.ps1`**
+5. **`build-only.ps1`**
    - Build uniquement (sans déploiement)
    - Utile pour tester le build
 
-4. **`verifier-config.ps1`**
+6. **`verifier-config.ps1`**
    - Vérifie la configuration Netlify
    - Teste l'authentification
 
 ### Documentation
 
-1. **`MEMO_PROBLEMES_SOLUTIONS.md`** 📝
+1. **`GUIDE_DEPLOIEMENT_AUTO.md`** 🆕 (Nouveau)
+   - Guide du déploiement automatique
+   - Explications sur les scripts sans interaction
+   - Configuration du site ID
+
+2. **`MEMO_PROBLEMES_SOLUTIONS.md`** 📝
    - Liste des problèmes rencontrés
    - Solutions détaillées
    - Conseils de dépannage
 
-2. **`GUIDE_UTILISATION.md`**
+3. **`GUIDE_UTILISATION.md`**
    - Guide d'utilisation des scripts
    - Workflow recommandé
    - Commandes utiles
 
-3. **`HISTORIQUE_DEPLOIEMENTS.md`**
+4. **`HISTORIQUE_DEPLOIEMENTS.md`**
    - Journal des déploiements
    - Modifications apportées
    - Notes importantes
@@ -53,12 +65,22 @@ Ce dossier contient tous les scripts et la documentation nécessaires pour dépl
 
 Double-cliquez sur `DEPLOYER_NETLIFY.bat` à la racine du projet.
 
-### Déploiement via PowerShell (Complet)
+### Déploiement Automatique (Recommandé)
 
 ```powershell
 cd deploiement-netlify
 .\deploy.ps1
 ```
+
+Avec message personnalisé :
+```powershell
+.\deploy.ps1 -Message "Ajout nouvelle fonctionnalite"
+```
+
+**Avantages** :
+- ✅ Aucune interaction requise
+- ✅ Site ID pré-configuré (prclaravi)
+- ✅ Pas de demande de login ou nom de projet
 
 ### Déploiement Rapide (Build déjà fait)
 
@@ -79,6 +101,8 @@ cd deploiement-netlify
 - **Nom** : prclaravi
 - **URL** : https://prclaravi.netlify.app
 - **Dashboard** : https://app.netlify.com/projects/prclaravi
+- **Compte** : ohada.finance@gmail.com (Team SEKA)
+- **Configuration** : `.netlify/state.json` (automatique)
 
 ## ⚙️ Configuration
 
