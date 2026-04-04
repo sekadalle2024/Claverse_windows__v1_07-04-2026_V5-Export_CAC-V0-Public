@@ -60,6 +60,7 @@ def calculer_poste_formule(ref: str, formule: str, postes_calcules: Dict[str, fl
 def process_balance_to_liasse_format(
     balance_n_df: pd.DataFrame,
     balance_n1_df: Optional[pd.DataFrame],
+    balance_n2_df: Optional[pd.DataFrame],
     correspondances: Dict
 ) -> Dict[str, Any]:
     """
@@ -94,6 +95,7 @@ def process_balance_to_liasse_format(
     # Détecter les colonnes
     col_map_n = detect_balance_columns(balance_n_df)
     col_map_n1 = detect_balance_columns(balance_n1_df) if balance_n1_df is not None else None
+    col_map_n2 = detect_balance_columns(balance_n2_df) if balance_n2_df is not None else None
     
     # Fonction pour calculer les montants d'une balance
     def calculer_montants_balance(balance_df, col_map, correspondances_section):
@@ -149,6 +151,15 @@ def process_balance_to_liasse_format(
                 structure_complete['compte_resultat']
             )
         
+        # Calculer montants N-2
+        montants_n2 = {}
+        if balance_n2_df is not None and col_map_n2:
+            montants_n2 = calculer_montants_balance(
+                balance_n2_df,
+                col_map_n2,
+                structure_complete['compte_resultat']
+            )
+        
         # Construire la liste complète avec TOUS les postes
         for poste in structure_complete['compte_resultat']:
             ref = poste['ref']
@@ -157,20 +168,24 @@ def process_balance_to_liasse_format(
             if poste.get('type') == 'total' and 'formule' in poste:
                 montant_n = calculer_poste_formule(ref, poste['formule'], montants_n)
                 montant_n1 = calculer_poste_formule(ref, poste['formule'], montants_n1) if montants_n1 else 0
+                montant_n2 = calculer_poste_formule(ref, poste['formule'], montants_n2) if montants_n2 else 0
                 
                 # Stocker pour les calculs suivants
                 montants_n[ref] = montant_n
                 montants_n1[ref] = montant_n1
+                montants_n2[ref] = montant_n2
             else:
                 montant_n = montants_n.get(ref, 0)
                 montant_n1 = montants_n1.get(ref, 0)
+                montant_n2 = montants_n2.get(ref, 0)
             
             resultat_complet.append({
                 'ref': ref,
                 'libelle': poste['libelle'],
                 'note': poste.get('note', ''),
                 'montant_n': montant_n,
-                'montant_n1': montant_n1
+                'montant_n1': montant_n1,
+                'montant_n2': montant_n2
             })
     
     # Traiter le Bilan (utiliser les correspondances existantes)
@@ -194,6 +209,14 @@ def process_balance_to_liasse_format(
                     correspondances[section_name]
                 )
             
+            montants_n2 = {}
+            if balance_n2_df is not None and col_map_n2:
+                montants_n2 = calculer_montants_balance(
+                    balance_n2_df,
+                    col_map_n2,
+                    correspondances[section_name]
+                )
+            
             liste_postes = bilan_actif_complet if section_name == 'bilan_actif' else bilan_passif_complet
             
             for poste in correspondances[section_name]:
@@ -203,8 +226,36 @@ def process_balance_to_liasse_format(
                     'libelle': poste['libelle'],
                     'note': '',
                     'montant_n': montants_n.get(ref, 0),
-                    'montant_n1': montants_n1.get(ref, 0)
+                    'montant_n1': montants_n1.get(ref, 0),
+                    'montant_n2': montants_n2.get(ref, 0)
                 })
+    
+    # Calculer les totaux généraux pour le bilan
+    total_actif_n = sum(p['montant_n'] for p in bilan_actif_complet)
+    total_actif_n1 = sum(p['montant_n1'] for p in bilan_actif_complet)
+    total_actif_n2 = sum(p['montant_n2'] for p in bilan_actif_complet)
+    
+    bilan_actif_complet.append({
+        'ref': 'DZ',
+        'libelle': 'TOTAL GÉNÉRAL ACTIF',
+        'note': '',
+        'montant_n': total_actif_n,
+        'montant_n1': total_actif_n1,
+        'montant_n2': total_actif_n2
+    })
+    
+    total_passif_n = sum(p['montant_n'] for p in bilan_passif_complet)
+    total_passif_n1 = sum(p['montant_n1'] for p in bilan_passif_complet)
+    total_passif_n2 = sum(p['montant_n2'] for p in bilan_passif_complet)
+    
+    bilan_passif_complet.append({
+        'ref': 'DZ',
+        'libelle': 'TOTAL GÉNÉRAL PASSIF',
+        'note': '',
+        'montant_n': total_passif_n,
+        'montant_n1': total_passif_n1,
+        'montant_n2': total_passif_n2
+    })
     
     return {
         'compte_resultat': resultat_complet,
@@ -218,11 +269,12 @@ def generate_section_html_liasse(
     title: str,
     postes: List[Dict],
     exercice_n_label: str = "EXERCICE N",
-    exercice_n1_label: str = "EXERCICE N-1"
+    exercice_n1_label: str = "EXERCICE N-1",
+    exercice_n2_label: str = "EXERCICE N-2"
 ) -> str:
     """
     Génère le HTML pour une section au format liasse officielle.
-    Affiche TOUS les postes avec 2 colonnes de montants.
+    Affiche TOUS les postes avec 2 colonnes de montants (N et N-1 seulement).
     """
     if not postes:
         return ''
@@ -233,7 +285,7 @@ def generate_section_html_liasse(
             <span>{title}</span>
             <span class="arrow">›</span>
         </div>
-        <div class="section-content-ef">
+        <div class="section-content-ef active">
             <table class="liasse-table">
                 <thead>
                     <tr>
@@ -254,8 +306,8 @@ def generate_section_html_liasse(
         montant_n = poste.get('montant_n', 0)
         montant_n1 = poste.get('montant_n1', 0)
         
-        # Déterminer si c'est un poste de totalisation (en majuscules généralement)
-        is_total = ref.startswith('X') or libelle.isupper() or 'TOTAL' in libelle.upper()
+        # Déterminer si c'est un poste de totalisation
+        is_total = ref.startswith('X') or ref == 'DZ' or libelle.isupper() or 'TOTAL' in libelle.upper()
         row_class = 'total-row' if is_total else ''
         
         html += f"""

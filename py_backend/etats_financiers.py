@@ -1514,26 +1514,29 @@ async def process_excel(request: ExcelUploadRequest):
         )
         from html_etats_controle import generate_all_etats_controle_html
         
-        # Traiter les balances au format liasse
-        results_liasse = process_balance_to_liasse_format(balance_df, balance_n1_df, correspondances)
+        # Chercher Balance N-2 si disponible (AVANT le traitement)
+        balance_n2_df = None
+        balance_n2_patterns = ["Balance N-2", "balance n-2", "BALANCE N-2", "Balance N-2 (", "balance_n2"]
+        for sheet in sheet_names:
+            if any(pattern in sheet for pattern in balance_n2_patterns):
+                balance_n2_df = pd.read_excel(excel_data, sheet_name=sheet)
+                logger.info(f"✅ Balance N-2 trouvée dans l'onglet '{sheet}': {len(balance_n2_df)} lignes")
+                break
+        
+        if balance_n2_df is None:
+            logger.info("📋 Balance N-2 non trouvée, colonne N-2 sera vide")
+        
+        # Traiter les balances au format liasse avec N-2
+        results_liasse = process_balance_to_liasse_format(balance_df, balance_n1_df, balance_n2_df, correspondances)
         
         # Calculer le TFT au format liasse (N et N-1)
         try:
             resultat_net_n = next((p['montant_n'] for p in results_liasse['compte_resultat'] if p['ref'] == 'XI'), 0)
             resultat_net_n1 = next((p['montant_n1'] for p in results_liasse['compte_resultat'] if p['ref'] == 'XI'), 0)
             
-            # Chercher Balance N-2 si disponible
-            balance_n2_df = None
-            balance_n2_patterns = ["Balance N-2", "balance n-2", "BALANCE N-2", "Balance N-2 (", "balance_n2"]
-            for sheet in sheet_names:
-                if any(pattern in sheet for pattern in balance_n2_patterns):
-                    balance_n2_df = pd.read_excel(excel_data, sheet_name=sheet)
-                    logger.info(f"✅ Balance N-2 trouvée dans l'onglet '{sheet}'")
-                    break
-            
             tft_data = calculer_tft_liasse(balance_df, balance_n1_df, balance_n2_df, resultat_net_n, resultat_net_n1)
             results_liasse['tft'] = tft_data
-            logger.info("✅ TFT calculé avec succès (format liasse N et N-1)")
+            logger.info("✅ TFT calculé avec succès (format liasse N, N-1 et N-2)")
         except Exception as e:
             logger.warning(f"⚠️ Erreur calcul TFT: {e}")
             import traceback

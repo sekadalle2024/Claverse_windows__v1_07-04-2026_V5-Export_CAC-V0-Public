@@ -321,6 +321,12 @@
 
       // Remplacer la table avec les résultats
       if (result.success && result.html) {
+        // Stocker les résultats pour l'export
+        if (result.results) {
+          window.lastEtatsFinanciersResults = result.results;
+          console.log("✅ Résultats stockés dans window.lastEtatsFinanciersResults");
+        }
+        
         const replaced = replaceTableWithResults(table, result.html);
 
         if (replaced) {

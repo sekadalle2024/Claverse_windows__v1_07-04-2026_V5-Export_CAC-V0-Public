@@ -130,7 +130,6 @@
             { text: "📊 Lead Balance", action: () => this.executeLeadBalance(), shortcut: "Ctrl+L" },
             { text: "📥 Export Lead Balance", action: () => this.exportLeadBalanceToExcel(), shortcut: "Ctrl+Shift+L" },
             { text: "📊 États Financiers SYSCOHADA", action: () => this.executeEtatsFinanciers(), shortcut: "Ctrl+F" },
-            { text: "📥 Export États Financiers", action: () => this.exportEtatsFinanciersToExcel(), shortcut: "Ctrl+Shift+F" },
             { text: "📋 Exporter Liasse Officielle", action: () => this.exporterLiasseOfficielle(), shortcut: "Ctrl+Shift+O" }
           ]
         },
@@ -139,8 +138,11 @@
           items: [
             { text: "📊 Calculer États Financiers", action: () => this.executeEtatsFinanciers(), shortcut: "Ctrl+F" },
             { text: "📥 Importer Balance Excel", action: () => this.importBalanceExcel() },
+            { text: "─────────────────────", action: null },
             { text: "📋 Afficher Bilan", action: () => this.showBilan() },
-            { text: "📋 Afficher Compte de Résultat", action: () => this.showCompteResultat() }
+            { text: "📋 Afficher Compte de Résultat", action: () => this.showCompteResultat() },
+            { text: "─────────────────────", action: null },
+            { text: "📋 Exporter Liasse Officielle", action: () => this.exporterLiasseOfficielle(), shortcut: "Ctrl+Shift+O" }
           ]
         },
         {
@@ -7462,6 +7464,100 @@
         };
         document.head.appendChild(script);
       });
+    }
+
+    /**
+     * Export des États Financiers vers Excel
+     * Exporte les états financiers générés (Bilan, Compte de Résultat, TFT, Annexes)
+     * vers un fichier Excel multi-onglets
+     */
+    async exportEtatsFinanciersToExcel() {
+      try {
+        // Vérifier si des résultats États Financiers existent
+        const etatFinContainer = document.querySelector('.etats-fin-container');
+        if (!etatFinContainer) {
+          this.showAlert("⚠️ Aucun état financier trouvé. Veuillez d'abord générer les états financiers avec 'Etat fin'.");
+          return;
+        }
+
+        this.showQuickNotification("📥 Préparation de l'export Excel des états financiers...");
+        console.log("📥 [Export États Financiers] Début de l'export");
+
+        // Charger la bibliothèque XLSX si elle n'est pas déjà chargée
+        if (typeof XLSX === 'undefined') {
+          await this.loadXLSXLibrary();
+        }
+
+        // Créer un nouveau classeur Excel
+        const workbook = XLSX.utils.book_new();
+        let exportedCount = 0;
+
+        // Extraire et exporter chaque section
+        const sections = [
+          { selector: '.section-bilan_actif', name: 'Bilan Actif' },
+          { selector: '.section-bilan_passif', name: 'Bilan Passif' },
+          { selector: '.section-compte_resultat', name: 'Compte de Résultat' },
+          { selector: '.section-tft', name: 'TFT' },
+          { selector: '.section-annexes', name: 'Annexes' }
+        ];
+
+        sections.forEach(({ selector, name }) => {
+          const section = etatFinContainer.querySelector(selector);
+          if (!section) {
+            console.log(`⚠️ [Export États Financiers] Section non trouvée: ${name}`);
+            return;
+          }
+
+          const table = section.querySelector('table');
+          if (!table) {
+            console.log(`⚠️ [Export États Financiers] Tableau non trouvé dans: ${name}`);
+            return;
+          }
+
+          // Extraire les données du tableau
+          const tableData = this.extractTableDataFromElement(table, { n: 'N', n_1: 'N-1' });
+          
+          if (tableData && tableData.length > 0) {
+            // Créer la feuille Excel
+            const worksheet = XLSX.utils.aoa_to_sheet(tableData);
+            
+            // Définir la largeur des colonnes
+            worksheet['!cols'] = [
+              { wch: 10 },  // REF
+              { wch: 40 },  // LIBELLÉS
+              { wch: 8 },   // NOTE
+              { wch: 15 },  // EXERCICE N
+              { wch: 15 }   // EXERCICE N-1
+            ];
+
+            // Ajouter la feuille au classeur
+            XLSX.utils.book_append_sheet(workbook, worksheet, name);
+            exportedCount++;
+            console.log(`📥 [Export États Financiers] Section exportée: ${name}`);
+          }
+        });
+
+        if (exportedCount === 0) {
+          this.showAlert("⚠️ Aucune donnée à exporter. Vérifiez que les états financiers sont affichés.");
+          return;
+        }
+
+        // Générer le nom du fichier avec la date
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
+        const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '');
+        const filename = `Etats_Financiers_${dateStr}_${timeStr}.xlsx`;
+
+        // Générer et télécharger le fichier Excel
+        XLSX.writeFile(workbook, filename);
+
+        this.showQuickNotification(`✅ Export réussi: ${exportedCount} sections exportées dans ${filename}`);
+        console.log(`✅ [Export États Financiers] Fichier généré: ${filename}`);
+
+      } catch (error) {
+        console.error("❌ [Export États Financiers] Erreur:", error);
+        this.showAlert(`❌ Erreur lors de l'export: ${error.message}`);
+      }
     }
 
     // === ÉTATS FINANCIERS SYSCOHADA ===
