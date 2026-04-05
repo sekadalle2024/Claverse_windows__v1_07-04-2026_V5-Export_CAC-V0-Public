@@ -1510,12 +1510,22 @@ async def process_excel(request: ExcelUploadRequest):
         from annexes_liasse_complete import calculer_annexes_completes
         from html_liasse_complete import generate_tft_html_liasse, generate_annexes_html_liasse
         from etats_controle_exhaustifs import (
-            calculer_etat_controle_bilan_actif,
-            calculer_etat_controle_bilan_passif,
-            calculer_etat_controle_compte_resultat,
-            calculer_etat_controle_tft,
-            calculer_etat_controle_sens_comptes,
-            calculer_etat_equilibre_bilan
+            calculer_etat_controle_bilan_actif_n,
+            calculer_etat_controle_bilan_actif_n1,
+            calculer_etat_controle_bilan_actif_variation,
+            calculer_etat_controle_bilan_passif_n,
+            calculer_etat_controle_bilan_passif_n1,
+            calculer_etat_controle_bilan_passif_variation,
+            calculer_etat_controle_compte_resultat_n,
+            calculer_etat_controle_compte_resultat_n1,
+            calculer_etat_controle_compte_resultat_variation,
+            calculer_etat_controle_tft_n,
+            calculer_etat_controle_tft_n1,
+            calculer_etat_controle_sens_comptes_n,
+            calculer_etat_controle_sens_comptes_n1,
+            calculer_etat_equilibre_bilan_n,
+            calculer_etat_equilibre_bilan_n1,
+            calculer_etat_equilibre_bilan_variation
         )
         from html_etats_controle import generate_all_etats_controle_html
         
@@ -1754,49 +1764,52 @@ async def process_excel(request: ExcelUploadRequest):
         if 'annexes' in results_liasse and results_liasse['annexes']:
             html += generate_annexes_html_liasse(results_liasse['annexes'])
         
-        # Calculer et ajouter les états de contrôle exhaustifs
+        # Calculer et ajouter les états de contrôle exhaustifs (16 états)
         try:
             etats_controle = {}
             
             # Les données sont déjà au format liasse avec montant_n et montant_n1 dans chaque poste
-            # Pas besoin de séparer, on passe directement les listes complètes
             bilan_actif_n = results_liasse['bilan_actif']
-            bilan_actif_n1 = results_liasse['bilan_actif']  # Même liste car contient déjà N et N-1
+            bilan_actif_n1 = results_liasse['bilan_actif']
             bilan_passif_n = results_liasse['bilan_passif']
             bilan_passif_n1 = results_liasse['bilan_passif']
             compte_resultat_n = results_liasse['compte_resultat']
             compte_resultat_n1 = results_liasse['compte_resultat']
             
-            # États de contrôle pour chaque document (N et N-1)
-            etats_controle['etat_controle_bilan_actif'] = calculer_etat_controle_bilan_actif(
-                bilan_actif_n, bilan_actif_n1
-            )
-            etats_controle['etat_controle_bilan_passif'] = calculer_etat_controle_bilan_passif(
-                bilan_passif_n, bilan_passif_n1
-            )
-            etats_controle['etat_controle_compte_resultat'] = calculer_etat_controle_compte_resultat(
-                compte_resultat_n, compte_resultat_n1
-            )
+            # 1-3: Bilan Actif (N, N-1, Variation)
+            etats_controle['etat_controle_bilan_actif_n'] = calculer_etat_controle_bilan_actif_n(bilan_actif_n)
+            etats_controle['etat_controle_bilan_actif_n1'] = calculer_etat_controle_bilan_actif_n1(bilan_actif_n1)
+            etats_controle['etat_controle_bilan_actif_variation'] = calculer_etat_controle_bilan_actif_variation(bilan_actif_n, bilan_actif_n1)
             
-            # État de contrôle TFT
+            # 4-6: Bilan Passif (N, N-1, Variation)
+            etats_controle['etat_controle_bilan_passif_n'] = calculer_etat_controle_bilan_passif_n(bilan_passif_n)
+            etats_controle['etat_controle_bilan_passif_n1'] = calculer_etat_controle_bilan_passif_n1(bilan_passif_n1)
+            etats_controle['etat_controle_bilan_passif_variation'] = calculer_etat_controle_bilan_passif_variation(bilan_passif_n, bilan_passif_n1)
+            
+            # 7-9: Compte de Résultat (N, N-1, Variation)
+            etats_controle['etat_controle_compte_resultat_n'] = calculer_etat_controle_compte_resultat_n(compte_resultat_n)
+            etats_controle['etat_controle_compte_resultat_n1'] = calculer_etat_controle_compte_resultat_n1(compte_resultat_n1)
+            etats_controle['etat_controle_compte_resultat_variation'] = calculer_etat_controle_compte_resultat_variation(compte_resultat_n, compte_resultat_n1)
+            
+            # 10-11: TFT (N, N-1)
             if 'tft' in results_liasse and results_liasse['tft']:
                 tft_data = results_liasse['tft'].get('tft', [])
-                etats_controle['etat_controle_tft'] = calculer_etat_controle_tft(
-                    tft_data, tft_data
-                )
+                etats_controle['etat_controle_tft_n'] = calculer_etat_controle_tft_n(tft_data)
+                etats_controle['etat_controle_tft_n1'] = calculer_etat_controle_tft_n1(tft_data)
             
-            # État de contrôle du sens des comptes
+            # 12-13: Sens des Comptes (N, N-1)
             balance_n_records = balance_df.to_dict('records') if balance_df is not None else []
             balance_n1_records = balance_n1_df.to_dict('records') if balance_n1_df is not None else []
-            etats_controle['etat_controle_sens_comptes'] = calculer_etat_controle_sens_comptes(
-                balance_n_records, balance_n1_records
-            )
+            etats_controle['etat_controle_sens_comptes_n'] = calculer_etat_controle_sens_comptes_n(balance_n_records)
+            etats_controle['etat_controle_sens_comptes_n1'] = calculer_etat_controle_sens_comptes_n1(balance_n1_records)
             
-            # État d'équilibre du bilan
+            # 14-16: Équilibre Bilan (N, N-1, Variation)
             resultat_net_n = next((p['montant_n'] for p in results_liasse['compte_resultat'] if p['ref'] == 'XI'), 0)
             resultat_net_n1 = next((p['montant_n1'] for p in results_liasse['compte_resultat'] if p['ref'] == 'XI'), 0)
             
-            etats_controle['etat_equilibre_bilan'] = calculer_etat_equilibre_bilan(
+            etats_controle['etat_equilibre_bilan_n'] = calculer_etat_equilibre_bilan_n(bilan_actif_n, bilan_passif_n, resultat_net_n)
+            etats_controle['etat_equilibre_bilan_n1'] = calculer_etat_equilibre_bilan_n1(bilan_actif_n1, bilan_passif_n1, resultat_net_n1)
+            etats_controle['etat_equilibre_bilan_variation'] = calculer_etat_equilibre_bilan_variation(
                 bilan_actif_n, bilan_passif_n, resultat_net_n,
                 bilan_actif_n1, bilan_passif_n1, resultat_net_n1
             )
@@ -1811,7 +1824,7 @@ async def process_excel(request: ExcelUploadRequest):
             html_etats = generate_all_etats_controle_html(etats_controle)
             logger.info(f"  HTML généré: {len(html_etats)} caractères")
             html += html_etats
-            logger.info("✅ États de contrôle exhaustifs générés avec succès")
+            logger.info("✅ États de contrôle exhaustifs générés avec succès (16 états)")
             
         except Exception as e:
             logger.warning(f"⚠️ Erreur génération états de contrôle: {e}")

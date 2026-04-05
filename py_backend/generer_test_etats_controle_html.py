@@ -8,30 +8,42 @@ import pandas as pd
 import os
 from datetime import datetime
 from etats_controle_exhaustifs import (
-    calculer_etat_controle_bilan_actif,
-    calculer_etat_controle_bilan_passif,
-    calculer_etat_controle_compte_resultat,
-    calculer_etat_controle_tft,
-    calculer_etat_controle_sens_comptes,
-    calculer_etat_equilibre_bilan,
+    calculer_etat_controle_bilan_actif_n,
+    calculer_etat_controle_bilan_actif_n1,
+    calculer_etat_controle_bilan_actif_variation,
+    calculer_etat_controle_bilan_passif_n,
+    calculer_etat_controle_bilan_passif_n1,
+    calculer_etat_controle_bilan_passif_variation,
+    calculer_etat_controle_compte_resultat_n,
+    calculer_etat_controle_compte_resultat_n1,
+    calculer_etat_controle_compte_resultat_variation,
+    calculer_etat_controle_tft_n,
+    calculer_etat_controle_tft_n1,
+    calculer_etat_controle_sens_comptes_n,
+    calculer_etat_controle_sens_comptes_n1,
+    calculer_etat_equilibre_bilan_n,
+    calculer_etat_equilibre_bilan_n1,
+    calculer_etat_equilibre_bilan_variation,
     format_montant_controle
 )
 
 
 def charger_balance_demo():
     """Charge la balance démo depuis le fichier Excel"""
-    fichier = "P000 -BALANCE DEMO N_N-1_N-2.xls"
+    # Chemin relatif depuis la racine du projet
+    fichier = os.path.join("py_backend", "P000 -BALANCE DEMO N_N-1_N-2.xls")
     
     if not os.path.exists(fichier):
         print(f"❌ Fichier non trouvé: {fichier}")
         return None, None
     
-    # Charger les onglets avec les années réelles
-    balance_n = pd.read_excel(fichier, sheet_name="BALANCE 2018")
-    balance_n1 = pd.read_excel(fichier, sheet_name="BALANCE 2017")
+    # Charger les onglets avec gestion des espaces
+    # Les onglets actuels sont: "BALANCE N ", "BALANCE N-1 ", "BALANCE N-2"
+    balance_n = pd.read_excel(fichier, sheet_name="BALANCE N ")
+    balance_n1 = pd.read_excel(fichier, sheet_name="BALANCE N-1 ")
     
-    print(f"✅ Balance N (2018) chargée: {len(balance_n)} comptes")
-    print(f"✅ Balance N-1 (2017) chargée: {len(balance_n1)} comptes")
+    print(f"✅ Balance N chargée: {len(balance_n)} comptes")
+    print(f"✅ Balance N-1 chargée: {len(balance_n1)} comptes")
     
     return balance_n, balance_n1
 
@@ -397,12 +409,22 @@ def main():
     
     # Pour simplifier, on crée des données de test
     etats_controle = {
-        'etat_controle_bilan_actif': calculer_etat_controle_bilan_actif([], []),
-        'etat_controle_bilan_passif': calculer_etat_controle_bilan_passif([], []),
-        'etat_controle_compte_resultat': calculer_etat_controle_compte_resultat([], []),
-        'etat_controle_tft': calculer_etat_controle_tft([], []),
-        'etat_controle_sens_comptes': calculer_etat_controle_sens_comptes(donnees_n, donnees_n1),
-        'etat_equilibre_bilan': calculer_etat_equilibre_bilan([], [], 0, [], [], 0)
+        'etat_controle_bilan_actif_n': calculer_etat_controle_bilan_actif_n([]),
+        'etat_controle_bilan_actif_n1': calculer_etat_controle_bilan_actif_n1([]),
+        'etat_controle_bilan_actif_variation': calculer_etat_controle_bilan_actif_variation([], []),
+        'etat_controle_bilan_passif_n': calculer_etat_controle_bilan_passif_n([]),
+        'etat_controle_bilan_passif_n1': calculer_etat_controle_bilan_passif_n1([]),
+        'etat_controle_bilan_passif_variation': calculer_etat_controle_bilan_passif_variation([], []),
+        'etat_controle_compte_resultat_n': calculer_etat_controle_compte_resultat_n([]),
+        'etat_controle_compte_resultat_n1': calculer_etat_controle_compte_resultat_n1([]),
+        'etat_controle_compte_resultat_variation': calculer_etat_controle_compte_resultat_variation([], []),
+        'etat_controle_tft_n': calculer_etat_controle_tft_n([]),
+        'etat_controle_tft_n1': calculer_etat_controle_tft_n1([]),
+        'etat_controle_sens_comptes_n': calculer_etat_controle_sens_comptes_n(donnees_n),
+        'etat_controle_sens_comptes_n1': calculer_etat_controle_sens_comptes_n1(donnees_n1),
+        'etat_equilibre_bilan_n': calculer_etat_equilibre_bilan_n([], [], 0),
+        'etat_equilibre_bilan_n1': calculer_etat_equilibre_bilan_n1([], [], 0),
+        'etat_equilibre_bilan_variation': calculer_etat_equilibre_bilan_variation([], [], 0, [], [], 0)
     }
     
     # Générer le HTML

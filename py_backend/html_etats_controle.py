@@ -71,22 +71,28 @@ def generate_etat_controle_html(etat_controle: Dict[str, Any], section_id: str) 
 
 
 def generate_all_etats_controle_html(etats_controle: Dict[str, Dict[str, Any]]) -> str:
-    """Génère le HTML pour tous les états de contrôle"""
+    """Génère le HTML pour tous les 16 états de contrôle"""
     
     html = ""
     
-    # Ordre des états de contrôle
+    # Ordre des 16 états de contrôle (format exhaustif)
     ordre = [
-        ('etat_controle_bilan_actif', 'Etat de contrôle Bilan Actif Exercice N'),
-        ('etat_controle_bilan_actif_n1', 'Etat de contrôle Bilan Actif Exercice N-1'),
-        ('etat_controle_bilan_passif', 'Etat de contrôle Bilan Passif Exercice N'),
-        ('etat_controle_bilan_passif_n1', 'Etat de contrôle Bilan Passif Exercice N-1'),
-        ('etat_controle_compte_resultat', 'Etat de contrôle Compte de Résultat Exercice N'),
-        ('etat_controle_compte_resultat_n1', 'Etat de contrôle Compte de Résultat Exercice N-1'),
-        ('etat_controle_tft', 'Etat de contrôle TFT Exercice N'),
-        ('etat_controle_tft_n1', 'Etat de contrôle TFT Exercice N-1'),
-        ('etat_controle_sens_comptes', 'Etat de contrôle Sens des Comptes'),
-        ('etat_equilibre_bilan', 'Etat d\'équilibre Bilan'),
+        ('etat_controle_bilan_actif_n', '1. Etat de contrôle Bilan Actif (Exercice N)'),
+        ('etat_controle_bilan_actif_n1', '2. Etat de contrôle Bilan Actif (Exercice N-1)'),
+        ('etat_controle_bilan_actif_variation', '3. Variation Bilan Actif'),
+        ('etat_controle_bilan_passif_n', '4. Etat de contrôle Bilan Passif (Exercice N)'),
+        ('etat_controle_bilan_passif_n1', '5. Etat de contrôle Bilan Passif (Exercice N-1)'),
+        ('etat_controle_bilan_passif_variation', '6. Variation Bilan Passif'),
+        ('etat_controle_compte_resultat_n', '7. Etat de contrôle Compte de Résultat (Exercice N)'),
+        ('etat_controle_compte_resultat_n1', '8. Etat de contrôle Compte de Résultat (Exercice N-1)'),
+        ('etat_controle_compte_resultat_variation', '9. Variation Compte de Résultat'),
+        ('etat_controle_tft_n', '10. Etat de contrôle Tableau des Flux de Trésorerie (Exercice N)'),
+        ('etat_controle_tft_n1', '11. Etat de contrôle Tableau des Flux de Trésorerie (Exercice N-1)'),
+        ('etat_controle_tft_variation', '12. Variation Tableau des Flux de Trésorerie'),
+        ('etat_controle_sens_comptes_n', '13. Etat de contrôle Sens des Comptes (Exercice N)'),
+        ('etat_controle_sens_comptes_n1', '14. Etat de contrôle Sens des Comptes (Exercice N-1)'),
+        ('etat_equilibre_bilan_n', '15. Etat d\'équilibre Bilan (Exercice N)'),
+        ('etat_equilibre_bilan_n1', '16. Etat d\'équilibre Bilan (Exercice N-1)'),
     ]
     
     for key, _ in ordre:
