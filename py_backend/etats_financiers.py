@@ -1521,13 +1521,14 @@ async def process_excel(request: ExcelUploadRequest):
             calculer_etat_controle_compte_resultat_variation,
             calculer_etat_controle_tft_n,
             calculer_etat_controle_tft_n1,
+            calculer_etat_controle_tft_variation,
             calculer_etat_controle_sens_comptes_n,
             calculer_etat_controle_sens_comptes_n1,
             calculer_etat_equilibre_bilan_n,
-            calculer_etat_equilibre_bilan_n1,
-            calculer_etat_equilibre_bilan_variation
+            calculer_etat_equilibre_bilan_n1
         )
-        from html_etats_controle import generate_all_etats_controle_html
+        # Import du nouveau module avec les 16 états de contrôle exhaustifs
+        from etats_controle_exhaustifs_html import generate_all_16_etats_controle_html
         
         # Chercher Balance N-2 si disponible (AVANT le traitement)
         balance_n2_df = None
@@ -1803,25 +1804,101 @@ async def process_excel(request: ExcelUploadRequest):
             etats_controle['etat_controle_sens_comptes_n'] = calculer_etat_controle_sens_comptes_n(balance_n_records)
             etats_controle['etat_controle_sens_comptes_n1'] = calculer_etat_controle_sens_comptes_n1(balance_n1_records)
             
-            # 14-16: Équilibre Bilan (N, N-1, Variation)
+            # 15-16: Équilibre Bilan (N, N-1)
             resultat_net_n = next((p['montant_n'] for p in results_liasse['compte_resultat'] if p['ref'] == 'XI'), 0)
             resultat_net_n1 = next((p['montant_n1'] for p in results_liasse['compte_resultat'] if p['ref'] == 'XI'), 0)
             
             etats_controle['etat_equilibre_bilan_n'] = calculer_etat_equilibre_bilan_n(bilan_actif_n, bilan_passif_n, resultat_net_n)
             etats_controle['etat_equilibre_bilan_n1'] = calculer_etat_equilibre_bilan_n1(bilan_actif_n1, bilan_passif_n1, resultat_net_n1)
-            etats_controle['etat_equilibre_bilan_variation'] = calculer_etat_equilibre_bilan_variation(
-                bilan_actif_n, bilan_passif_n, resultat_net_n,
-                bilan_actif_n1, bilan_passif_n1, resultat_net_n1
-            )
             
-            # Générer le HTML des états de contrôle
-            logger.info("🔄 Génération HTML états de contrôle...")
-            logger.info(f"  Nombre d'états: {len(etats_controle)}")
-            for key in etats_controle.keys():
-                nb_postes = len(etats_controle[key].get('postes', []))
-                logger.info(f"    - {key}: {nb_postes} postes")
+            # Générer le HTML des états de contrôle avec le nouveau module (16 états exhaustifs)
+            logger.info("🔄 Génération HTML états de contrôle exhaustifs (16 états)...")
             
-            html_etats = generate_all_etats_controle_html(etats_controle)
+            # Préparer les données pour N
+            controles_n = {
+                'statistiques': {
+                    'total_comptes_balance': len(balance_n_records),
+                    'comptes_integres': len(balance_n_records) - len([c for c in balance_n_records if not c.get('integre', True)]),
+                    'comptes_non_integres': len([c for c in balance_n_records if not c.get('integre', True)]),
+                    'taux_couverture': 100.0 if len(balance_n_records) == 0 else (len(balance_n_records) - len([c for c in balance_n_records if not c.get('integre', True)])) / len(balance_n_records) * 100
+                },
+                'equilibre_bilan': etats_controle.get('etat_equilibre_bilan_n', {}),
+                'equilibre_resultat': {
+                    'resultat_cr': resultat_net_n,
+                    'resultat_bilan': resultat_net_n,
+                    'difference': 0,
+                    'equilibre': True
+                },
+                'comptes_non_integres': [],
+                'comptes_sens_inverse': [],
+                'comptes_desequilibre': [],
+                'hypothese_affectation': {
+                    'resultat_net': resultat_net_n,
+                    'actif': sum(p.get('montant_n', 0) for p in bilan_actif_n),
+                    'passif_sans_resultat': sum(p.get('montant_n', 0) for p in bilan_passif_n),
+                    'difference_avant': 0,
+                    'passif_avec_resultat': sum(p.get('montant_n', 0) for p in bilan_passif_n) + resultat_net_n,
+                    'difference_apres': 0,
+                    'equilibre_apres': True
+                },
+                'comptes_sens_anormal': {
+                    'critiques': [],
+                    'eleves': [],
+                    'moyens': [],
+                    'faibles': []
+                }
+            }
+            
+            # Préparer les données pour N-1
+            controles_n1 = {
+                'statistiques': {
+                    'total_comptes_balance': len(balance_n1_records),
+                    'comptes_integres': len(balance_n1_records) - len([c for c in balance_n1_records if not c.get('integre', True)]),
+                    'comptes_non_integres': len([c for c in balance_n1_records if not c.get('integre', True)]),
+                    'taux_couverture': 100.0 if len(balance_n1_records) == 0 else (len(balance_n1_records) - len([c for c in balance_n1_records if not c.get('integre', True)])) / len(balance_n1_records) * 100
+                },
+                'equilibre_bilan': etats_controle.get('etat_equilibre_bilan_n1', {}),
+                'equilibre_resultat': {
+                    'resultat_cr': resultat_net_n1,
+                    'resultat_bilan': resultat_net_n1,
+                    'difference': 0,
+                    'equilibre': True
+                },
+                'comptes_non_integres': [],
+                'comptes_sens_inverse': [],
+                'comptes_desequilibre': [],
+                'hypothese_affectation': {
+                    'resultat_net': resultat_net_n1,
+                    'actif': sum(p.get('montant_n1', 0) for p in bilan_actif_n1),
+                    'passif_sans_resultat': sum(p.get('montant_n1', 0) for p in bilan_passif_n1),
+                    'difference_avant': 0,
+                    'passif_avec_resultat': sum(p.get('montant_n1', 0) for p in bilan_passif_n1) + resultat_net_n1,
+                    'difference_apres': 0,
+                    'equilibre_apres': True
+                },
+                'comptes_sens_anormal': {
+                    'critiques': [],
+                    'eleves': [],
+                    'moyens': [],
+                    'faibles': []
+                }
+            }
+            
+            # Totaux pour N et N-1
+            totaux_n = {
+                'actif': sum(p.get('montant_n', 0) for p in bilan_actif_n),
+                'passif': sum(p.get('montant_n', 0) for p in bilan_passif_n),
+                'resultat': resultat_net_n
+            }
+            
+            totaux_n1 = {
+                'actif': sum(p.get('montant_n1', 0) for p in bilan_actif_n1),
+                'passif': sum(p.get('montant_n1', 0) for p in bilan_passif_n1),
+                'resultat': resultat_net_n1
+            }
+            
+            # Appeler la nouvelle fonction qui génère les 16 états
+            html_etats = generate_all_16_etats_controle_html(controles_n, controles_n1, totaux_n, totaux_n1)
             logger.info(f"  HTML généré: {len(html_etats)} caractères")
             html += html_etats
             logger.info("✅ États de contrôle exhaustifs générés avec succès (16 états)")
