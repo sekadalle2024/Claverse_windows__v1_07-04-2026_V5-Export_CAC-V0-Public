@@ -258,7 +258,7 @@ else:
         if 'TFT' in wb_check.sheetnames:
             ws = wb_check['TFT']
             for r in range(10, 45):
-                if ws[f'H{r}'].value and ws[f'H{r}'].value != 0:
+                if ws[f'I{r}'].value and ws[f'I{r}'].value != 0:
                     cellules_tft += 1
             print(f"   {'✅' if cellules_tft > 0 else '❌'} Onglet TFT: {cellules_tft} montants pertinents ecrits")
             if cellules_tft == 0:

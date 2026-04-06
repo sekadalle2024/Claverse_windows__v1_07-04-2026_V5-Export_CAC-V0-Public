@@ -329,21 +329,26 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
         """
         try:
             cell = ws[cell_addr]
+            target_cell = cell
             
             # Vérifier si c'est une cellule fusionnée
             if isinstance(cell, openpyxl.cell.cell.MergedCell):
                 # Trouver la cellule principale de la fusion
                 for merged_range in ws.merged_cells.ranges:
                     if cell_addr in merged_range:
-                        # Écrire dans la cellule en haut à gauche de la fusion
-                        top_left_cell = merged_range.start_cell
-                        ws.cell(top_left_cell.row, top_left_cell.column, value)
-                        return True
-                return False
-            else:
-                # Cellule normale
-                ws[cell_addr] = value
+                        # Obtenir la vraie cellule de la fusion
+                        target_cell = ws.cell(merged_range.start_cell.row, merged_range.start_cell.column)
+                        break
+            
+            # [CRITIQUE] NE JAMAIS ÉCRASER LES FORMULES EXCEL 
+            # (Ex: =SUM(H25:H30)) car ce sont elles qui calculent les Rubriques 
+            # de Totalisation (BK, BZ, TOTAL GENERAL, etc.) de la Liasse !
+            if isinstance(target_cell.value, str) and str(target_cell.value).strip().startswith('='):
                 return True
+                
+            # Cellule normale ou maître
+            target_cell.value = value
+            return True
         except Exception as e:
             logger.warning(f"   Erreur écriture {cell_addr}: {e}")
             return False
@@ -484,8 +489,8 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
     onglet_resultat = next((name for name in wb.sheetnames if 'RESULTAT' in name.upper() or 'RÉSULTAT' in name.upper()), None)
     if onglet_resultat:
         logger.info(f"📝 Remplissage {onglet_resultat}...")
-        # Compte de résultat: N en H, N-1 en I
-        compteur, erreurs = remplir_onglet_par_scan(onglet_resultat, cr_dict, 'H', 'I')
+        # Compte de résultat: N en I, N-1 en J (Décalage de H/I pour éviter d'écrire sur les NOTES)
+        compteur, erreurs = remplir_onglet_par_scan(onglet_resultat, cr_dict, 'I', 'J')
         total_cellules += compteur
         erreurs_total += erreurs
         
@@ -502,8 +507,8 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
     onglet_tft = next((name for name in wb.sheetnames if 'TFT' in name.upper() or 'TRÉSORERIE' in name.upper() or 'TRESORERIE' in name.upper()), None)
     if onglet_tft and tft_dict:
         logger.info(f"📝 Remplissage {onglet_tft}...")
-        # TFT: N en H, N-1 en I
-        compteur, erreurs = remplir_onglet_par_scan(onglet_tft, tft_dict, 'H', 'I')
+        # TFT: N en I, N-1 en K (Le modèle DGI a des espaces intercalaires sur cet onglet)
+        compteur, erreurs = remplir_onglet_par_scan(onglet_tft, tft_dict, 'I', 'K')
         total_cellules += compteur
         erreurs_total += erreurs
         

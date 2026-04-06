@@ -24,15 +24,15 @@ La gestion flottante a été supprimée au profit d'une approche de ciblage expl
 
 1. **Scanner R.E.F vertical intelligent** : Le système conserve la logique de boucler sur la **Colonne A** (`REF` ou index 1) à la recherche stricte des codes comptables à 2 lettres uppercase SYSCOHADA (ex: `AD`, `RA`, `ZA`).
 2. **Ciblage Absolu (Frappe Balistique)** : Une fois la ligne trouvée via la R.E.F., le script injecte rigoureusement `montant_n` et `montant_n1` en ignorant totalement la logique de fusion latérale.
-   Suite à l'analyse fine des grilles "EXERCICE N" dans le document certifié `Liasse_officielle_revise.xlsx`, le mappage adopté est le suivant :
-   - **ACTIF** : `H` (N) & `I` (N-1)
-   - **PASSIF** : `H` (N) & `I` (N-1)
-   - **RESULTAT** : `H` (N) & `I` (N-1)
-   - **TFT** : `H` (N) & `I` (N-1)
-   - **BILAN** : Double passage sur `H/I` (pour l'Actif, ref=Col. A) et sur `M/N` (pour le Passif, ref=Col. J)
-3. **Traducteur à la volée du TFT** : Extraire dynamiquement les 2 premières lettres majuscules d'un dictionnaire brut (ex: `ZA_ouverture` -> `ZA`) permet la compatibilité pleine de l'onglet TFT.
+   Suite à l'analyse fine des grilles finales dans le document certifié `Liasse_officielle_revise.xlsx` (avec appui visuel par captures d'écran), le mappage rectifié est le suivant :
+   - **ACTIF** : Colonnes `H` (N) & `I` (N-1)
+   - **PASSIF** : Colonnes `H` (N) & `I` (N-1)
+   - **RESULTAT** : Colonnes `I` (N) & `J` (N-1)
+   - **TFT** : Colonnes `I` (N) & `K` (N-1) (En respectant l'espace séparateur J de la DGI)
+   - **BILAN** : Colonnes `H/I` (Actif) et logées en `M/N` (Passif)
+4. **Protection Absolue des Formules Excel (Totaux)** : Avant, l'algorithme écrivait aveuglément « 0 » sur les lignes de rubrique de totalisation (ex: BK, BZ, TOTAL GENERAL) car le Backend (qui les évalue à 0 de son côté car dépourvus de racines brutes) pensait bien faire. Désormais, toute tentative d'écriture vers une cellule contenant une formule `SUM` native du template liasse est purement ignorée, conservant intacts `TOTAL ACTIF CIRCULANT`, `TOTAL GENERAL`, etc.
 
-> **Résultat ✅** : La liasse officielle sort parfaitement alignée sous les marqueurs `EXERCICE N` préétablis. Plus aucun écrasement gauche n'est soulevé. Les onglets TFT et BILAN sont complets.
+> **Résultat ✅** : La liasse est maintenant peuplée exactement dans les carrés millimétrés N et N-1 de chaque page. Les formules natives Excel font leur travail de sommation pour générer les blocs de synthèse !
 
 ---
 
