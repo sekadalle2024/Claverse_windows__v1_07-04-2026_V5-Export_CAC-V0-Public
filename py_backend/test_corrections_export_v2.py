@@ -229,7 +229,7 @@ else:
         cellules_cr = 0
         if 'RESULTAT' in wb_check.sheetnames:
             ws = wb_check['RESULTAT']
-            for r in range(10, 45):
+            for r in range(10, 52):
                 v = ws[f'I{r}'].value  # N est en I
                 if v is not None and v != 0 and v != '-':
                     cellules_cr += 1
@@ -243,10 +243,14 @@ else:
         cellules_bilan = 0
         if 'BILAN' in wb_check.sheetnames:
             ws = wb_check['BILAN']
+            # Vérifier Actif (H)
             for r in range(10, 45):
-                if ws[f'H{r}'].value or ws[f'M{r}'].value:
-                    if ws[f'H{r}'].value != 0 and ws[f'M{r}'].value != 0:
-                        cellules_bilan += 1
+                if ws[f'H{r}'].value and ws[f'H{r}'].value != 0:
+                    cellules_bilan += 1
+            # Vérifier Passif (M)
+            for r in range(10, 45):
+                if ws[f'M{r}'].value and ws[f'M{r}'].value != 0:
+                    cellules_bilan += 1
             print(f"   {'✅' if cellules_bilan > 0 else '❌'} Onglet BILAN: {cellules_bilan} montants pertinents ecrits")
             if cellules_bilan == 0:
                 erreurs.append(f"❌ Onglet BILAN vide")

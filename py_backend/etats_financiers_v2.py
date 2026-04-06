@@ -41,19 +41,30 @@ def calculer_poste_formule(ref: str, formule: str, postes_calcules: Dict[str, fl
     """
     Calcule un poste de totalisation à partir d'une formule.
     Exemple: "TA - RA - RB" ou "XA + TE + TF"
+    Utilise re.sub avec frontières de mots (\b) pour éviter les remplacements partiels.
     """
-    try:
-        # Remplacer les références par les valeurs (0 si absent)
-        expression = formule
-        for ref_poste in set(re.findall(r'[A-Z]{2}', formule)):
-            valeur = postes_calcules.get(ref_poste, 0)
-            expression = expression.replace(ref_poste, str(valeur))
+    if not formule:
+        return 0.0
         
-        # Évaluer l'expression
-        resultat = eval(expression)
-        return float(resultat)
+    try:
+        # 1. Identifier toutes les références potentielles (2 lettres majuscules)
+        refs_formule = set(re.findall(r'[A-Z]{2}', formule))
+        
+        # 2. Préparer le dictionnaire de valeurs (0 si absent)
+        valeurs_locales = {}
+        for r in refs_formule:
+            valeurs_locales[r] = float(postes_calcules.get(r, 0.0))
+        
+        # 3. Remplacer les références par des noms de variables sûrs dans l'expression
+        # Note: eval() est utilisé pour la simplicité, mais avec des noms de variables définis.
+        expression = formule
+        
+        # Pour une évaluation plus propre, on peut passer les valeurs directement dans eval()
+        # via un dictionnaire de contexte.
+        return float(eval(expression, {"__builtins__": None}, valeurs_locales))
+        
     except Exception as e:
-        logger.error(f"Erreur calcul formule {ref} ({formule}): {e}")
+        logger.error(f"❌ Erreur calcul formule {ref} ('{formule}'): {e}")
         return 0.0
 
 

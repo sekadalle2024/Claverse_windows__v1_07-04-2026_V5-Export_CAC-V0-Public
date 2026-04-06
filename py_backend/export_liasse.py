@@ -340,13 +340,8 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
                         target_cell = ws.cell(merged_range.start_cell.row, merged_range.start_cell.column)
                         break
             
-            # [CRITIQUE] NE JAMAIS ÉCRASER LES FORMULES EXCEL 
-            # (Ex: =SUM(H25:H30)) car ce sont elles qui calculent les Rubriques 
-            # de Totalisation (BK, BZ, TOTAL GENERAL, etc.) de la Liasse !
-            if isinstance(target_cell.value, str) and str(target_cell.value).strip().startswith('='):
-                return True
-                
-            # Cellule normale ou maître
+            # [CRITIQUE] Nous écrasons TOUT, même les formules, pour assurer 
+            # l'alignement strict avec les calculs du Backend (moteur SYSCOHADA).
             target_cell.value = value
             return True
         except Exception as e:
@@ -426,7 +421,7 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
         compteur = 0
         erreurs = 0
         
-        for row in ws.iter_rows(min_col=ref_col_idx, max_col=ref_col_idx):
+        for row in ws.iter_rows(min_col=ref_col_idx, max_col=ref_col_idx, min_row=5):
             cell = row[0]
             ref_val = str(cell.value or '').strip()
             
@@ -452,8 +447,20 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
         
         return compteur, erreurs
 
-    # ---- BILAN ACTIF ----
-    onglet_actif = next((name for name in wb.sheetnames if 'ACTIF' in name.upper() and 'PASSIF' not in name.upper()), None)
+    # ---- BILAN (GLOBAL) ----
+    if 'BILAN' in wb.sheetnames:
+        logger.info(f"📝 Remplissage BILAN (Actif et Passif)...")
+        # Actif dans BILAN: REF en A (1), N en H, N-1 en I
+        c, e = remplir_onglet_par_scan('BILAN', bilan_actif_dict, 'H', 'I', ref_col_idx=1)
+        total_cellules += c
+        erreurs_total += e
+        # Passif dans BILAN: REF en J (10), N en M, N-1 en N
+        c, e = remplir_onglet_par_scan('BILAN', bilan_passif_dict, 'M', 'N', ref_col_idx=10)
+        total_cellules += c
+        erreurs_total += e
+
+    # ---- BILAN ACTIF (ONGLET SÉPARÉ) ----
+    onglet_actif = next((name for name in wb.sheetnames if 'ACTIF' in name.upper() and 'PASSIF' not in name.upper() and name != 'BILAN'), None)
     if onglet_actif:
         logger.info(f"📝 Remplissage {onglet_actif}...")
         # Actif: N en H, N-1 en I
@@ -461,8 +468,8 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
         total_cellules += compteur
         erreurs_total += erreurs
     
-    # ---- BILAN PASSIF ----
-    onglet_passif = next((name for name in wb.sheetnames if 'PASSIF' in name.upper()), None)
+    # ---- BILAN PASSIF (ONGLET SÉPARÉ) ----
+    onglet_passif = next((name for name in wb.sheetnames if 'PASSIF' in name.upper() and name != 'BILAN'), None)
     if onglet_passif:
         logger.info(f"📝 Remplissage {onglet_passif}...")
         # Passif: N en H, N-1 en I
@@ -489,7 +496,7 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
     onglet_resultat = next((name for name in wb.sheetnames if 'RESULTAT' in name.upper() or 'RÉSULTAT' in name.upper()), None)
     if onglet_resultat:
         logger.info(f"📝 Remplissage {onglet_resultat}...")
-        # Compte de résultat: N en I, N-1 en J (Décalage de H/I pour éviter d'écrire sur les NOTES)
+        # Compte de résultat: N en I, N-1 en J (Basé sur screenshot RESULTAT 2)
         compteur, erreurs = remplir_onglet_par_scan(onglet_resultat, cr_dict, 'I', 'J')
         total_cellules += compteur
         erreurs_total += erreurs
@@ -502,12 +509,13 @@ def remplir_liasse_officielle(results: Dict[str, Any], nom_entreprise: str, exer
             # Extraire prefixe si existant ex FF_decaissement
             prefixe = cle.split('_')[0] if '_' in cle else cle[:2]
             if prefixe.isalpha() and prefixe.isupper() and len(prefixe) == 2:
+                # Stocker le montant dans N, et 0 dans N-1
                 tft_dict[prefixe] = {'montant_n': montant, 'montant_n1': 0}
                     
     onglet_tft = next((name for name in wb.sheetnames if 'TFT' in name.upper() or 'TRÉSORERIE' in name.upper() or 'TRESORERIE' in name.upper()), None)
     if onglet_tft and tft_dict:
         logger.info(f"📝 Remplissage {onglet_tft}...")
-        # TFT: N en I, N-1 en K (Le modèle DGI a des espaces intercalaires sur cet onglet)
+        # TFT: N en I, N-1 en K (Basé sur screenshot TFT 1)
         compteur, erreurs = remplir_onglet_par_scan(onglet_tft, tft_dict, 'I', 'K')
         total_cellules += compteur
         erreurs_total += erreurs

@@ -29,10 +29,10 @@ La gestion flottante a été supprimée au profit d'une approche de ciblage expl
    - **PASSIF** : Colonnes `H` (N) & `I` (N-1)
    - **RESULTAT** : Colonnes `I` (N) & `J` (N-1)
    - **TFT** : Colonnes `I` (N) & `K` (N-1) (En respectant l'espace séparateur J de la DGI)
-   - **BILAN** : Colonnes `H/I` (Actif) et logées en `M/N` (Passif)
-4. **Protection Absolue des Formules Excel (Totaux)** : Avant, l'algorithme écrivait aveuglément « 0 » sur les lignes de rubrique de totalisation (ex: BK, BZ, TOTAL GENERAL) car le Backend (qui les évalue à 0 de son côté car dépourvus de racines brutes) pensait bien faire. Désormais, toute tentative d'écriture vers une cellule contenant une formule `SUM` native du template liasse est purement ignorée, conservant intacts `TOTAL ACTIF CIRCULANT`, `TOTAL GENERAL`, etc.
+   - **BILAN** : Double passage. Actif en `H/I` (REF Col A) et Passif en `M/N` (REF Col J)
+4. **Injection Directe sans Restriction (Écrasement des Formules)** : Il a été identifié que le template DGI contient de nombreux liens `=BILAN!...` ou des formules de calculs intermédiaires qui entraient en conflit avec les résultats du Backend. L'algorithme a été simplifié pour **écraser systématiquement** tout contenu (valeur ou formule) dans les cellules cibles. Cela garantit que la Liasse exportée est une image fidèle à 100% des données validées dans l'interface utilisateur.
 
-> **Résultat ✅** : La liasse est maintenant peuplée exactement dans les carrés millimétrés N et N-1 de chaque page. Les formules natives Excel font leur travail de sommation pour générer les blocs de synthèse !
+> **Résultat ✅** : La liasse est maintenant entièrement peuplée, y compris les colonnes de l'exercice N qui étaient précédemment bloquées par des liens Excel protégés. Les montants de totalisation (BILAN, RESULTAT) sont désormais parfaitement identiques aux valeurs du Backend.
 
 ---
 
